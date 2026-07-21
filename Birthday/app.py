@@ -227,7 +227,7 @@ with layar_utama.container():
 
     # ================= HALAMAN 2 =================
     elif st.session_state.tahap == 2:
-        st.markdown("<h1 style='text-align: center; font-size: 80px; margin-top: 2vh; filter: drop-shadow(5px 5px 0px #c71585);'></h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; font-size: 80px; margin-top: 2vh; filter: drop-shadow(5px 5px 0px #c71585);'>🫣</h1>", unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
