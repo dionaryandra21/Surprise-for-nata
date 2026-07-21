@@ -231,9 +231,9 @@ with layar_utama.container():
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 18px; color: #ff1493; text-shadow: 2px 2px 0px #ffffff; line-height: 1.8;'>KAMU SAYANG DION GA? 👀</div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 18px; color: #ff1493; text-shadow: 2px 2px 0px #ffffff; line-height: 1.8;'>KAMU SAYANG DION GA?</div>", unsafe_allow_html=True)
             st.write("")
-            jawaban = st.radio("Pilih:", ["IYAAAAAA", "IYAAAAAA BANGET"], index=None, label_visibility="collapsed")
+            jawaban = st.radio("Pilih:", ["IYAAAAAA DONGGG", "IYAAAAAA BANGET"], index=None, label_visibility="collapsed")
             st.write("") 
             
             if jawaban:
