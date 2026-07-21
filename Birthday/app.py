@@ -239,44 +239,64 @@ with layar_utama.container():
             
             if jawaban:
                 if st.button("START >", use_container_width=True):
-                    st.session_state.tahap = 3 # Lanjut ke Kue
+                    st.session_state.tahap = 3 
                     st.rerun() 
             else:
                 st.button("LOCKED X", disabled=True, use_container_width=True)
 
-    # ================= HALAMAN 3 (FITUR BARU: TIUP LILIN MIC) =================
+    # ================= HALAMAN 3 (LILIN OTOMATIS CSS + JS) =================
     elif st.session_state.tahap == 3:
-        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 5vh;'>TIUP LILINNYA!</div>", unsafe_allow_html=True)
-        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 10px; color: #c71585; margin-bottom: 5px;'>(Izinkan akses mikrofon dan tiup ke arah HP-mu!)</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 2vh;'>MAKE A WISH & TIUP LILINNYA!</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 10px; color: #c71585; margin-bottom: 5px;'>(Izinkan akses mikrofon lalu tiup speaker bawah HP-mu)</div>", unsafe_allow_html=True)
 
-        # Skrip HTML/JS untuk deteksi tiupan suara
+        # Skrip HTML untuk Lilin CSS Asli & Deteksi Suara
         html_kue = """
         <!DOCTYPE html>
         <html>
         <head>
         <style>
-          body { font-family: 'Courier New', Courier, monospace; text-align: center; background-color: transparent; overflow: hidden; margin: 0; padding: 0;}
-          .cake-container { position: relative; display: inline-block; margin-top: 40px; }
-          .cake { font-size: 120px; filter: drop-shadow(4px 4px 0px #c71585); }
+          body { text-align: center; background-color: transparent; overflow: hidden; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace;}
+          .candle-container { position: relative; margin-top: 80px; margin-bottom: 50px; height: 150px; }
+          .candle {
+            width: 40px; height: 100px;
+            background: linear-gradient(to right, #ffb6c1, #ffe4e1 20%, #ffe4e1 80%, #ffb6c1);
+            border-radius: 4px; border: 2px solid #ff69b4; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+            box-shadow: 0px 5px 0px #c71585;
+          }
+          .wick {
+            width: 4px; height: 15px; background: #333; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); border-radius: 2px;
+          }
+          .flame {
+            width: 20px; height: 40px;
+            background: radial-gradient(ellipse at bottom, #fff 10%, #fde08b 30%, #ff8c00 70%, transparent 100%);
+            border-radius: 50% 50% 20% 20%; position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            animation: flicker 0.1s infinite alternate; box-shadow: 0 0 20px #ffaa00, 0 0 40px #ffaa00; transform-origin: bottom center;
+          }
           @keyframes flicker {
-            0% { transform: translateX(-50%) scale(1); opacity: 1; }
-            50% { transform: translateX(-50%) scale(1.1); opacity: 0.9; }
-            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1.05) rotate(2deg); opacity: 1; }
           }
-          .flame { 
-            font-size: 50px; position: absolute; top: -35px; left: 50%; transform: translateX(-50%); 
-            animation: flicker 0.5s infinite alternate; transition: opacity 0.3s ease-out; filter: drop-shadow(0px 0px 10px #ff69b4);
+          .smoke {
+            width: 10px; height: 10px; background: rgba(100,100,100,0.5); border-radius: 50%;
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); opacity: 0;
           }
-          .flame.out { opacity: 0; animation: none; }
-          #status { color: #d81b60; font-weight: bold; margin-top: 30px; font-size: 16px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.5);}
+          .blow-out .flame { display: none; }
+          .blow-out .smoke { animation: floatUp 2s ease-out forwards; }
+          @keyframes floatUp {
+            0% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -100px) scale(4); opacity: 0; }
+          }
+          #status { color: #d81b60; font-weight: bold; font-size: 14px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.5);}
         </style>
         </head>
         <body>
-          <div class="cake-container">
-            <div class="flame" id="flame">🔥</div>
-            <div class="cake">🎂</div>
+          <div class="candle-container" id="candle-wrap">
+            <div class="candle">
+              <div class="wick"></div>
+              <div class="flame" id="flame"></div>
+              <div class="smoke"></div>
+            </div>
           </div>
-          <br>
           <div id="status">⏳ Menunggu akses mikrofon...</div>
 
           <script>
@@ -290,7 +310,6 @@ with layar_utama.container():
 
                 analyser.smoothingTimeConstant = 0.8;
                 analyser.fftSize = 1024;
-
                 microphone.connect(analyser);
                 analyser.connect(scriptProcessor);
                 scriptProcessor.connect(audioContext.destination);
@@ -302,16 +321,26 @@ with layar_utama.container():
                   for (let i = 0; i < array.length; i++) { values += (array[i]); }
                   let average = values / array.length;
                   
-                  // Deteksi suara keras (tiupan angin ke mic)
+                  // Jika tiupan keras (suara tinggi)
                   if (average > 60) { 
-                    document.getElementById('flame').classList.add('out');
-                    document.getElementById('status').innerText = "YAY! LILIN MATI! KLIK TOMBOL DI BAWAH!";
-                    stream.getTracks().forEach(track => track.stop()); // Matikan mic setelah berhasil
+                    document.getElementById('candle-wrap').classList.add('blow-out');
+                    document.getElementById('status').innerText = "✨ YAY! LILIN MATI!";
+                    stream.getTracks().forEach(track => track.stop()); // Matikan mic
+                    
+                    // Delay 2 detik untuk efek asap, lalu otomatis klik tombol Streamlit
+                    setTimeout(function() {
+                        let buttons = window.parent.document.querySelectorAll('button');
+                        buttons.forEach(b => {
+                            if(b.innerText === 'LANJUTKAN >') {
+                                b.click();
+                            }
+                        });
+                    }, 2000);
                   }
                 }
               })
               .catch(function(err) {
-                document.getElementById('status').innerText = "Gagal akses mic :( Pura-pura tiup aja lalu klik tombol di bawah!";
+                document.getElementById('status').innerText = "Mic tidak diizinkan. Silakan klik tombol manual di bawah.";
               });
           </script>
         </body>
@@ -321,8 +350,8 @@ with layar_utama.container():
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            # Tombol selalu ada jaga-jaga kalau HP-nya memblokir izin mikrofon
-            if st.button("LANJUT >", use_container_width=True):
+            # Tombol ini hanya cadangan, akan ter-klik otomatis oleh Javascript
+            if st.button("LANJUTKAN >", use_container_width=True):
                 st.session_state.tahap = 4
                 st.rerun()
 
@@ -359,7 +388,7 @@ with layar_utama.container():
         pesan_surat = """
         <div class="kertas-surat">
             <p><b>Hai BABE ku CAYAANGGGGGGGGGGGGG!</b></p>
-            <p>happy level up day!!! make a wish for u b'day, tahun ini umur kamu bertambah satu tahun dan jatah hidup kamu berkurang satu tahun juga semoga kamu sehat, kmu skrg makin dewasa, apapun yang kamu inginkan bisa terjadi. terimakasih udh lahir di dunia ini dan bertahan hidup, banyak hal yang sudah kmu laluin dan masih bnyk hal yng blm km laluin, semakin kamu dewasa semkin bnyk juga rintangannya but its okayy karna masih bnyk orang yg sayang sma kmu salah satunya aku ><, apapun susahnya apapun sedihnya apapun senangnya kamu nikmatin dn brsyukur. semoga banyak kebahagiaan yang kembali dari hari ini semoga semua harapan yg diinginkan menjadi kenyataan semoga akan ada banyak kebahagiaan yang datang ke dalam hidupmu semoga harimu jauh lebih menyenangkan sesuai dng harapan mu. sekali lagi selamat ulang tahun ya, terimakasih sudah menjadi kuat selama ini walaupun awalnya dikuat2in aj dan slnjutnya harus slalu kuat, ceria bahagia yaa!!I LOVE YOU SO MUCH NATAREL PRISQILLA RIANDINI HIMAWAN<3 </p>
+            <p>happy level up day!!! make a wish for u b'day, tahun ini umur kamu bertambah satu tahun dan jatah hidup kamu berkurang satu tahun juga semoga kamu sehat, kmu skrg makin dewasa, apapun yang kamu inginkan bisa terjadi. terimakasih udh lahir di dunia ini dan bertahan hidup, banyak hal yang sudah kmu laluin dan masih bnyk hal yng blm km laluin, semakin kamu dewasa semkin bnyk juga rintangannya but its okayy karna masih bnyk orang yg sayang sma kmu salah satunya aku ><, apapun susahnya apapun sedihnya apapun senangnya kamu nikmatin dn brsyukur. semoga banyak kebahagiaan yang kembali dari hari ini semoga semua harapan yg diinginkan menjadi kenyataan semoga akan ada banyak kebahagiaan yang datang ke dalam hidupmu semoga harimu jauh lebih menyenangkan sesuai dng harapan mu. sekali lagi selamat ulang tahun ya, terimakasih sudah menjadi kuat selama ini walaupun awalnya dikuat2in aj dan slnjutnya harus slalu kuat, ceria bahagia yaa!! I LOVE YOU SO MUCH NATAREL PRISQILLA RIANDINI HIMAWAN <3 </p>
             <div class="blinking-cursor">▼</div>
         </div>
         """
@@ -412,14 +441,12 @@ with layar_utama.container():
         </style>
         """, unsafe_allow_html=True)
         
-        # --- LOGIKA BACA FOTO ---
         img_html = ""
         if os.path.exists(FILE_FOTO):
             with open(FILE_FOTO, "rb") as image_file:
                 encoded_img = base64.b64encode(image_file.read()).decode()
             img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
 
-        # --- HTML Konsol TANPA Spasi di Awal ---
         gameboy_html = f"""
 <div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 430px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
@@ -456,7 +483,7 @@ with layar_utama.container():
                 st.session_state.tahap = 8 
                 st.rerun()
                 
-    # ================= HALAMAN 8 (TO BE CONTINUED) =================
+    # ================= HALAMAN 8 =================
     elif st.session_state.tahap == 8:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 15vh; margin-bottom: 30px; line-height: 1.5;'>TO BE CONTINUED... ✨</div>", unsafe_allow_html=True)
         
