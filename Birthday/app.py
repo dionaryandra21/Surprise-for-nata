@@ -249,25 +249,50 @@ with layar_utama.container():
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 2vh;'>MAKE A WISH & TIUP LILINNYA!</div>", unsafe_allow_html=True)
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 10px; color: #c71585; margin-bottom: 5px;'>(Izinkan akses mikrofon lalu tiup speaker bawah HP-mu)</div>", unsafe_allow_html=True)
 
-        # Skrip HTML untuk Lilin yang Menempel di Atas Kue & Pindah Otomatis
+        # Menghilangkan SELURUH tombol yang ada di Halaman 3 secara paksa 
+        st.markdown("""
+        <style>
+        div[data-testid="stButton"] {
+            display: none !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        # Skrip HTML untuk Kue Desain Asli, Lilin Menempel, dan Pindah Otomatis
         html_kue = """
         <!DOCTYPE html>
         <html>
         <head>
         <style>
           body { text-align: center; background-color: transparent; overflow: hidden; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace;}
-          .party-container { position: relative; margin-top: 60px; margin-bottom: 20px; display: inline-block; }
+          .party-container { position: relative; margin-top: 100px; display: inline-block; }
           
-          /* Kue Ulang Tahun Emoji */
-          .cake-emoji { font-size: 130px; line-height: 1; filter: drop-shadow(4px 4px 0px #c71585); position: relative; z-index: 2;}
+          /* KUE ULANG TAHUN CSS MURNI */
+          .cake {
+            width: 180px; height: 90px; background: #ffb6c1; position: relative; margin: 0 auto;
+            border-radius: 10px 10px 5px 5px; border: 4px solid #c71585; box-shadow: 0 8px 0 #c71585;
+          }
+          .icing {
+            width: 100%; height: 40px; background: #ffffff; border-radius: 5px 5px 25px 25px;
+            position: absolute; top: -2px; left: 0; border-bottom: 4px solid #c71585;
+          }
+          .plate {
+            width: 220px; height: 15px; background: #f8f9fa; border: 4px solid #c71585; 
+            border-radius: 20px; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); box-shadow: 0 5px 0 #dcdcdc;
+          }
+          /* Meses/Sprinkles */
+          .sprinkle { width: 8px; height: 4px; border-radius: 4px; position: absolute; }
+          .s1 { background: #ff69b4; top: 15px; left: 20px; transform: rotate(30deg); }
+          .s2 { background: #00ced1; top: 10px; left: 60px; transform: rotate(-20deg); }
+          .s3 { background: #ffd700; top: 20px; left: 100px; transform: rotate(45deg); }
+          .s4 { background: #32cd32; top: 12px; left: 140px; transform: rotate(-45deg); }
           
-          /* Lilin CSS */
+          /* LILIN MENANCAP DI KUE */
           .candle {
-            width: 25px; height: 70px;
-            background: linear-gradient(to right, #ffb6c1, #ffe4e1 20%, #ffe4e1 80%, #ffb6c1);
-            border-radius: 4px; border: 2px solid #ff69b4; 
-            position: absolute; left: 50%; top: -40px; transform: translateX(-50%); z-index: 3;
-            box-shadow: 0px 3px 0px #c71585;
+            width: 20px; height: 50px;
+            background: repeating-linear-gradient(45deg, #ffffff, #ffffff 5px, #ff1493 5px, #ff1493 10px);
+            border: 3px solid #c71585; border-radius: 4px; 
+            position: absolute; left: 50%; top: -50px; transform: translateX(-50%); z-index: 3;
           }
           .wick {
             width: 4px; height: 12px; background: #333; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); border-radius: 2px;
@@ -295,7 +320,7 @@ with layar_utama.container():
             100% { transform: translate(-50%, -100px) scale(4); opacity: 0; }
           }
           
-          #status { color: #d81b60; font-weight: bold; font-size: 14px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.7); margin-top: 10px;}
+          #status { color: #d81b60; font-weight: bold; font-size: 14px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.7); margin-top: 50px;}
         </style>
         </head>
         <body>
@@ -305,7 +330,15 @@ with layar_utama.container():
               <div class="flame" id="flame"></div>
               <div class="smoke"></div>
             </div>
-            <div class="cake-emoji">🎂</div>
+            <div class="cake">
+              <div class="icing">
+                <div class="sprinkle s1"></div>
+                <div class="sprinkle s2"></div>
+                <div class="sprinkle s3"></div>
+                <div class="sprinkle s4"></div>
+              </div>
+            </div>
+            <div class="plate"></div>
           </div>
           <br>
           <div id="status">⏳ Menunggu akses mikrofon...</div>
@@ -335,14 +368,14 @@ with layar_utama.container():
                   // Deteksi tiupan (suara kencang)
                   if (average > 60) { 
                     document.getElementById('candle-wrap').classList.add('blow-out');
-                    document.getElementById('status').innerText = "✨ YAY! LILIN MATI!";
+                    document.getElementById('status').innerText = "✨ YAY! LILIN MATI! TUNGGU BENTAR...";
                     stream.getTracks().forEach(track => track.stop()); // Matikan mic
                     
-                    // Delay 2 detik agar asap terlihat, lalu klik otomatis tombol yang disembunyikan
+                    // Delay 2 detik agar asap terlihat, lalu klik otomatis tombol tak kasat mata
                     setTimeout(function() {
                         let buttons = window.parent.document.querySelectorAll('button');
                         buttons.forEach(b => {
-                            if(b.innerText.includes('LANJUTKAN')) {
+                            if(b.textContent.includes('LANJUTKAN')) {
                                 b.click();
                             }
                         });
@@ -357,14 +390,13 @@ with layar_utama.container():
         </body>
         </html>
         """
-        components.html(html_kue, height=400)
+        components.html(html_kue, height=450)
         
-        # Tombol "LANJUTKAN" disembunyikan secara visual agar layar terlihat bersih
-        st.markdown("<div style='opacity: 0; position: absolute; z-index: -1;'>", unsafe_allow_html=True)
+        # Tombol ini ada di kode, tapi HILANG di layar berkat kode CSS di atasnya.
+        # Javascript yang akan diam-diam menekannya!
         if st.button("LANJUTKAN"):
             st.session_state.tahap = 4
             st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
 
     # ================= HALAMAN 4 (ANIMASI LEVEL UP) =================
     elif st.session_state.tahap == 4:
