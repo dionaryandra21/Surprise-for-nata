@@ -215,7 +215,7 @@ layar_utama = st.empty()
 with layar_utama.container():
     # ================= HALAMAN 1 =================
     if st.session_state.tahap == 1:
-        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 20px; margin-top: 5vh; line-height: 1.8; color: #ff1493; text-shadow: 2px 2px 0px #ffffff;'>SSST... ADA PESAN RAHASIA BUAT KAMU! 🤫</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 20px; margin-top: 5vh; line-height: 1.8; color: #ff1493; text-shadow: 2px 2px 0px #ffffff;'>SURPRISE.... ADA SESUATU NIH BUAT WYNTER !!!</div>", unsafe_allow_html=True)
         st.markdown("<h1 style='text-align: center; font-size: 100px; margin-top: 20px; filter: drop-shadow(5px 5px 0px #c71585);'>💌</h1>", unsafe_allow_html=True)
         
         st.write("")
