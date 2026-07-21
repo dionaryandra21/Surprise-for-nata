@@ -1,6 +1,8 @@
 import streamlit as st
 import random
 import time
+import os
+import base64
 
 # Mengatur konfigurasi halaman
 st.set_page_config(page_title="Surat Spesial", page_icon="💌")
@@ -209,9 +211,10 @@ st.markdown(awan_html, unsafe_allow_html=True)
 if 'tahap' not in st.session_state:
     st.session_state.tahap = 1
 
-# --- LOGIKA MUSIK BERKELANJUTAN ---
+# --- LOGIKA MUSIK AMAN (Hanya diputar jika filenya benar-benar ada) ---
 if st.session_state.tahap >= 4:
-    st.audio("lagu.mp3", format="audio/mpeg", autoplay=True)
+    if os.path.exists("lagu.mp3"):
+        st.audio("lagu.mp3", format="audio/mpeg", autoplay=True)
 
 layar_utama = st.empty()
 
@@ -255,7 +258,8 @@ with layar_utama.container():
         
         with layar_utama.container():
             st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 40px; color: #ff1493; margin-top: 30vh; text-shadow: 5px 5px 0px #ffffff; line-height: 1.5;'>LEVEL UP!<br><br>⭐ 26 ⭐</div>", unsafe_allow_html=True)
-            st.audio("levelup.mp3", format="audio/mpeg", autoplay=True) 
+            if os.path.exists("levelup.mp3"):
+                st.audio("levelup.mp3", format="audio/mpeg", autoplay=True) 
         time.sleep(3) 
         
         st.session_state.tahap = 4
@@ -296,7 +300,7 @@ with layar_utama.container():
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.link_button("📍 CEK LOKASI KUE", "https://wa.me/6285778103534?text=I LOVE U BABEEE <3", use_container_width=True)
+            st.link_button("💬 CHAT DION", "https://wa.me/6281234567890?text=Halo%20sayang,%20aku%20udah%20siap%20nih%20buat%20ambil%20kuenya!", use_container_width=True)
             st.write("")
             
             if st.button("📸 KENANGAN KITA", use_container_width=True):
@@ -313,10 +317,8 @@ with layar_utama.container():
     # ================= HALAMAN 6: KENANGAN KITA (RETRO CONSOLE) =================
     elif st.session_state.tahap == 6:
         
-        # --- CSS KHUSUS HALAMAN 6 UNTUK MENARIK TOMBOL KE DALAM KONSOL ---
         st.markdown("""
         <style>
-        /* Trik CSS menarik kolom ke atas masuk ke ruang kosong konsol */
         div[data-testid="stHorizontalBlock"] {
             margin-top: -120px !important;
             position: relative;
@@ -325,16 +327,22 @@ with layar_utama.container():
             margin-left: auto !important;
             margin-right: auto !important;
         }
-        /* Mengubah bentuk tombol agar lebih nge-blend dengan konsol */
         div[data-testid="stHorizontalBlock"] button {
-            border-radius: 20px !important; /* Membuat tombol agak oval */
+            border-radius: 20px !important; 
             box-shadow: 4px 4px 0px #c71585 !important;
         }
         </style>
         """, unsafe_allow_html=True)
         
-        # --- DESAIN KONSOL HTML (PASTIKAN RATA KIRI MENTOK) ---
-        gameboy_html = """
+        # --- LOGIKA BACA FOTO AMAN ---
+        img_html = ""
+        if os.path.exists("foto.jpg"):
+            with open("foto.jpg", "rb") as image_file:
+                encoded_img = base64.b64encode(image_file.read()).decode()
+            img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
+
+        # --- DESAIN KONSOL HTML ---
+        gameboy_html = f"""
 <div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 380px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
 <div style="background-color: #8bac0f; border: 4px solid #0f380f; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
@@ -342,14 +350,14 @@ with layar_utama.container():
 <div style="font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 15px; line-height: 1.5;">STAGE<br>KENANGAN</div>
 <div style="font-family: 'Press Start 2P', cursive; font-size: 8px;">(UNDER CONSTRUCTION 🚧)</div>
 </div>
-<img src="LINK_FOTO_KAMU_DISINI" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;" onerror="this.style.display='none'">
+{img_html}
 </div>
 </div>
 </div>
 """
         st.markdown(gameboy_html, unsafe_allow_html=True)
         
-        # --- TOMBOL STREAMLIT (Akan otomatis masuk ke dalam konsol berkat CSS di atas) ---
+        # --- TOMBOL STREAMLIT ---
         col1, col2, col3 = st.columns([1, 0.1, 1])
         with col1:
             if st.button("< BACK", use_container_width=True):
@@ -368,4 +376,4 @@ with layar_utama.container():
         with col2:
             if st.button("< KEMBALI", use_container_width=True):
                 st.session_state.tahap = 6
-                st.rerun()  
+                st.rerun()
