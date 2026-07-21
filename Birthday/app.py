@@ -470,19 +470,21 @@ with layar_utama.container():
             margin-left: auto !important;
             margin-right: auto !important;
         }
-        /* Menarik baris tombol FOTO ke atas masuk ke dalam area abu-abu konsol */
+        /* Mengatur posisi baris tombol geser foto */
         div[data-testid="stHorizontalBlock"]:nth-of-type(1) {
             margin-top: -180px !important;
         }
-        /* Menyesuaikan baris tombol STAGE di bawahnya */
+        /* Mengatur posisi baris tombol Back/Next */
         div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
             margin-top: 10px !important;
         }
+        /* Memperbaiki agar tombol tidak double/menumpuk */
         div[data-testid="stHorizontalBlock"] button {
             border-radius: 20px !important; 
             box-shadow: 4px 4px 0px #c71585 !important;
-            margin-bottom: 15px !important;
-            padding: 10px 10px !important;
+            margin-bottom: 10px !important;
+            padding: 8px 5px !important;
+            min-height: 45px !important;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -497,10 +499,9 @@ with layar_utama.container():
                 encoded_img = base64.b64encode(image_file.read()).decode()
             img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
         else:
-            # Jika foto ke-X belum diupload, tampilkan layar hitam
-            img_html = f'<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background-color: #222; color: #fff; font-family: \'Press Start 2P\', cursive; font-size: 10px;">{nama_file_sekarang}<br>KOSONG</div>'
+            img_html = f'<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background-color: #222; color: #fff; font-family: \'Press Start 2P\', cursive; font-size: 10px; text-align: center;">{nama_file_sekarang}<br><br>KOSONG</div>'
 
-        # Desain Gameboy yang diperbesar sedikit tingginya agar tombol muat
+        # Desain Gameboy (Warna tanggal disamakan abu-abunya dengan garis speaker)
         gameboy_html = f"""
 <div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 500px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
@@ -511,7 +512,7 @@ with layar_utama.container():
 {img_html}
 </div>
 </div>
-<div style="position: absolute; bottom: 25px; left: 20px; font-family: 'Press Start 2P', cursive; font-size: 8px; color: #a0a0a0; text-shadow: 1px 1px 0px #ffffff; letter-spacing: 1px;">1 JUNI 2026</div>
+<div style="position: absolute; bottom: 25px; left: 20px; font-family: 'Press Start 2P', cursive; font-size: 8px; color: #b0b0b0; text-shadow: 1px 1px 0px #ffffff; letter-spacing: 1px;">1 JUNI 2026</div>
 <div style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 6px; transform: rotate(-25deg);">
 <div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
 <div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
@@ -529,25 +530,24 @@ with layar_utama.container():
         # BARIS 1: Navigasi Ganti Foto
         col_f1, col_f2, col_f3 = st.columns([1, 1, 1])
         with col_f1:
-            if st.button("⏪ FOTO", use_container_width=True):
+            if st.button("⏪ FOTO", use_container_width=True, key="prev_foto"):
                 st.session_state.foto_index = st.session_state.foto_index - 1 if st.session_state.foto_index > 1 else 10
                 st.rerun()
         with col_f2:
-            # Menampilkan Indikator Foto (misal: 1/10)
             st.markdown(f"<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 11px; color: #ff1493; margin-top: 15px;'>{st.session_state.foto_index}/10</div>", unsafe_allow_html=True)
         with col_f3:
-            if st.button("FOTO ⏩", use_container_width=True):
+            if st.button("FOTO ⏩", use_container_width=True, key="next_foto"):
                 st.session_state.foto_index = st.session_state.foto_index + 1 if st.session_state.foto_index < 10 else 1
                 st.rerun()
 
         # BARIS 2: Navigasi Ganti Halaman
         col_s1, col_s2, col_s3 = st.columns([1, 0.1, 1])
         with col_s1:
-            if st.button("< BACK", use_container_width=True):
+            if st.button("< BACK", use_container_width=True, key="back_stage"):
                 st.session_state.tahap = 6
                 st.rerun()
         with col_s3:
-            if st.button("NEXT >", use_container_width=True):
+            if st.button("NEXT >", use_container_width=True, key="next_stage"):
                 st.session_state.tahap = 8 
                 st.rerun()
                 
