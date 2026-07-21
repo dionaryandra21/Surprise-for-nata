@@ -4,13 +4,18 @@ import time
 import os
 import base64
 
+# --- Pelacak Folder Otomatis ---
+DIR_SAAT_INI = os.path.dirname(os.path.abspath(__file__))
+FILE_LAGU = os.path.join(DIR_SAAT_INI, "lagu.mp3")
+FILE_LEVELUP = os.path.join(DIR_SAAT_INI, "levelup.mp3")
+FILE_FOTO = os.path.join(DIR_SAAT_INI, "foto.jpg")
+
 # Mengatur konfigurasi halaman
 st.set_page_config(page_title="Surat Spesial", page_icon="💌")
 
 # Memasukkan CSS Retro Hardcore
 css = """
 <style>
-/* Font 8-bit untuk semua elemen */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
 html, body, [class*="css"], p, div, label, h1, h2, h3 {
@@ -18,7 +23,6 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
     color: #d81b60 !important;
 }
 
-/* --- BACKGROUND PIXEL GRID --- */
 .stApp {
     background-color: #ffc0cb;
     background-image: 
@@ -27,14 +31,12 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
     background-size: 40px 40px; 
 }
 
-/* --- EFEK LAYAR TV JADUL (SCANLINES) --- */
 .scanlines {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
     background-size: 100% 4px; z-index: 999999; pointer-events: none; 
 }
 
-/* --- TOMBOL GAME KAKU (BLOCKY) --- */
 .stButton>button {
     background-color: #ff69b4 !important;
     border: 4px solid #ffffff !important;
@@ -56,7 +58,6 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
     box-shadow: 0px 0px 0px #c71585 !important; 
 }
 
-/* --- LINK BUTTON GAME KAKU --- */
 .stLinkButton > a {
     background-color: #ff69b4 !important;
     border: 4px solid #ffffff !important;
@@ -80,7 +81,6 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
     box-shadow: 0px 0px 0px #c71585 !important; 
 }
 
-/* --- OPSI RADIO BUTTON ALA KOTAK DIALOG GAME --- */
 .stRadio > div { gap: 15px; }
 
 .stRadio [role="radio"] div:first-child,
@@ -118,7 +118,6 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
     text-shadow: 2px 2px 0px #c71585 !important;
 }
 
-/* --- ANIMASI TRANSISI HALUS SETIAP PINDAH HALAMAN --- */
 .block-container {
     animation: fadeInPage 1.2s ease-in-out;
     position: relative;
@@ -129,17 +128,14 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
     100% { opacity: 1; transform: scale(1); }
 }
 
-/* Efek Hujan Love Khusus */
 .hujan-love {
     position: fixed; top: -10vh; font-size: 30px;
     animation: fall linear forwards; z-index: 99999; pointer-events: none;
 }
 @keyframes fall { to { transform: translateY(110vh); } }
 
-/* MENYEMBUNYIKAN BAR PEMUTAR MUSIK */
 audio { display: none !important; }
 
-/* --- DESAIN KOTAK DIALOG SURAT NPC --- */
 .kertas-surat {
     background-color: #ffffff; padding: 30px; 
     border: 5px solid #ff1493; border-radius: 0px; 
@@ -160,7 +156,6 @@ audio { display: none !important; }
 }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* --- ANIMASI AWAN BACKGROUND ASLI --- */
 .bg-clouds {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     z-index: 0; pointer-events: none; overflow: hidden;
@@ -199,7 +194,6 @@ audio { display: none !important; }
 st.markdown(css, unsafe_allow_html=True)
 st.markdown("<div class='scanlines'></div>", unsafe_allow_html=True)
 
-# Memasukkan 20 elemen awan asli ke web
 awan_html = f"""
 <div class="bg-clouds">
     {''.join([f'<div class="cloud c{i}">☁️</div>' for i in range(1, 21)])}
@@ -211,15 +205,15 @@ st.markdown(awan_html, unsafe_allow_html=True)
 if 'tahap' not in st.session_state:
     st.session_state.tahap = 1
 
-# --- LOGIKA MUSIK AMAN (Hanya diputar jika filenya benar-benar ada) ---
+# --- LOGIKA MUSIK AMAN (Sudah disesuaikan foldernya) ---
 if st.session_state.tahap >= 4:
-    if os.path.exists("lagu.mp3"):
-        st.audio("lagu.mp3", format="audio/mpeg", autoplay=True)
+    if os.path.exists(FILE_LAGU):
+        st.audio(FILE_LAGU, format="audio/mpeg", autoplay=True)
 
 layar_utama = st.empty()
 
 with layar_utama.container():
-    # ================= HALAMAN 1: SURAT TERTUTUP =================
+    # ================= HALAMAN 1 =================
     if st.session_state.tahap == 1:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 20px; margin-top: 5vh; line-height: 1.8; color: #ff1493; text-shadow: 2px 2px 0px #ffffff;'>SSST... ADA PESAN RAHASIA BUAT KAMU! 🤫</div>", unsafe_allow_html=True)
         st.markdown("<h1 style='text-align: center; font-size: 100px; margin-top: 20px; filter: drop-shadow(5px 5px 0px #c71585);'>💌</h1>", unsafe_allow_html=True)
@@ -231,7 +225,7 @@ with layar_utama.container():
                 st.session_state.tahap = 2
                 st.rerun() 
 
-    # ================= HALAMAN 2: PERTANYAAN =================
+    # ================= HALAMAN 2 =================
     elif st.session_state.tahap == 2:
         st.markdown("<h1 style='text-align: center; font-size: 80px; margin-top: 2vh; filter: drop-shadow(5px 5px 0px #c71585);'>🫣</h1>", unsafe_allow_html=True)
         
@@ -249,7 +243,7 @@ with layar_utama.container():
             else:
                 st.button("LOCKED X", disabled=True, use_container_width=True)
 
-    # ================= HALAMAN 3: ANIMASI LEVEL UP =================
+    # ================= HALAMAN 3 =================
     elif st.session_state.tahap == 3:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; margin-top: 35vh; text-shadow: 4px 4px 0px #ffffff;'>LEVEL 25...</div>", unsafe_allow_html=True)
         time.sleep(1.5) 
@@ -258,14 +252,14 @@ with layar_utama.container():
         
         with layar_utama.container():
             st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 40px; color: #ff1493; margin-top: 30vh; text-shadow: 5px 5px 0px #ffffff; line-height: 1.5;'>LEVEL UP!<br><br>⭐ 26 ⭐</div>", unsafe_allow_html=True)
-            if os.path.exists("levelup.mp3"):
-                st.audio("levelup.mp3", format="audio/mpeg", autoplay=True) 
+            if os.path.exists(FILE_LEVELUP):
+                st.audio(FILE_LEVELUP, format="audio/mpeg", autoplay=True) 
         time.sleep(3) 
         
         st.session_state.tahap = 4
         st.rerun()
 
-    # ================= HALAMAN 4: SURAT UTAMA =================
+    # ================= HALAMAN 4 =================
     elif st.session_state.tahap == 4:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-bottom: 20px; line-height: 1.5;'>STAGE CLEAR:<br><br>LEVEL UP!!! 💖🥳</div>", unsafe_allow_html=True)
         
@@ -294,7 +288,7 @@ with layar_utama.container():
                 st.session_state.tahap = 5
                 st.rerun()
 
-    # ================= HALAMAN 5: MENU OPSI =================
+    # ================= HALAMAN 5 =================
     elif st.session_state.tahap == 5:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; text-shadow: 4px 4px 0px #ffffff; margin-top: 10vh; margin-bottom: 40px; line-height: 1.5;'>PILIH STAGE 🎮</div>", unsafe_allow_html=True)
         
@@ -314,7 +308,7 @@ with layar_utama.container():
                 st.session_state.tahap = 4
                 st.rerun()
 
-    # ================= HALAMAN 6: KENANGAN KITA (RETRO CONSOLE) =================
+    # ================= HALAMAN 6 =================
     elif st.session_state.tahap == 6:
         
         st.markdown("""
@@ -334,14 +328,13 @@ with layar_utama.container():
         </style>
         """, unsafe_allow_html=True)
         
-        # --- LOGIKA BACA FOTO AMAN ---
+        # --- LOGIKA BACA FOTO (Juga disesuaikan foldernya) ---
         img_html = ""
-        if os.path.exists("foto.jpg"):
-            with open("foto.jpg", "rb") as image_file:
+        if os.path.exists(FILE_FOTO):
+            with open(FILE_FOTO, "rb") as image_file:
                 encoded_img = base64.b64encode(image_file.read()).decode()
             img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
 
-        # --- DESAIN KONSOL HTML ---
         gameboy_html = f"""
 <div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 380px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
@@ -357,7 +350,6 @@ with layar_utama.container():
 """
         st.markdown(gameboy_html, unsafe_allow_html=True)
         
-        # --- TOMBOL STREAMLIT ---
         col1, col2, col3 = st.columns([1, 0.1, 1])
         with col1:
             if st.button("< BACK", use_container_width=True):
@@ -368,7 +360,7 @@ with layar_utama.container():
                 st.session_state.tahap = 7 
                 st.rerun()
                 
-    # ================= HALAMAN 7: TO BE CONTINUED =================
+    # ================= HALAMAN 7 =================
     elif st.session_state.tahap == 7:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 15vh; margin-bottom: 30px; line-height: 1.5;'>TO BE CONTINUED... ✨</div>", unsafe_allow_html=True)
         
