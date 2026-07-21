@@ -314,7 +314,7 @@ with layar_utama.container():
         st.markdown("""
         <style>
         div[data-testid="stHorizontalBlock"] {
-            margin-top: -120px !important;
+            margin-top: -260px !important; /* Ditarik lebih ke atas biar masuk ke konsol yang udah dipanjangin */
             position: relative;
             z-index: 10;
             width: 280px !important;
@@ -324,19 +324,21 @@ with layar_utama.container():
         div[data-testid="stHorizontalBlock"] button {
             border-radius: 20px !important; 
             box-shadow: 4px 4px 0px #c71585 !important;
+            margin-bottom: 15px !important; /* Kasih jarak antar tombol biar ga nempel pas di HP */
         }
         </style>
         """, unsafe_allow_html=True)
         
-        # --- LOGIKA BACA FOTO (Juga disesuaikan foldernya) ---
+        # --- LOGIKA BACA FOTO ---
         img_html = ""
         if os.path.exists(FILE_FOTO):
             with open(FILE_FOTO, "rb") as image_file:
                 encoded_img = base64.b64encode(image_file.read()).decode()
             img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
 
+        # --- Konsol dipanjangkan (height jadi 500px) ---
         gameboy_html = f"""
-<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 380px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
+<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 500px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
 <div style="background-color: #8bac0f; border: 4px solid #0f380f; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
 <div style="text-align: center; color: #0f380f; z-index: 1;">
