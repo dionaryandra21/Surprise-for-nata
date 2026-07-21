@@ -205,7 +205,7 @@ st.markdown(awan_html, unsafe_allow_html=True)
 if 'tahap' not in st.session_state:
     st.session_state.tahap = 1
 
-# --- LOGIKA MUSIK AMAN (Sudah disesuaikan foldernya) ---
+# --- LOGIKA MUSIK AMAN ---
 if st.session_state.tahap >= 4:
     if os.path.exists(FILE_LAGU):
         st.audio(FILE_LAGU, format="audio/mpeg", autoplay=True)
@@ -314,7 +314,7 @@ with layar_utama.container():
         st.markdown("""
         <style>
         div[data-testid="stHorizontalBlock"] {
-            margin-top: -180px !important; /* Disesuaikan tarikannya karena konsolnya dipendekin */
+            margin-top: -180px !important;
             position: relative;
             z-index: 10;
             width: 280px !important;
@@ -336,40 +336,29 @@ with layar_utama.container():
                 encoded_img = base64.b64encode(image_file.read()).decode()
             img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
 
-        # --- Desain Konsol Diperbarui (Lebih pendek + Detail Retro + Watermark) ---
+        # --- HTML Konsol TANPA Spasi di Awal ---
         gameboy_html = f"""
 <div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 430px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
-
-    <!-- Layar Konsol -->
-    <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
-        <div style="background-color: #8bac0f; border: 4px solid #0f380f; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
-            <div style="text-align: center; color: #0f380f; z-index: 1;">
-                <div style="font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 15px; line-height: 1.5;">STAGE<br>KENANGAN</div>
-                <div style="font-family: 'Press Start 2P', cursive; font-size: 8px;">(UNDER CONSTRUCTION 🚧)</div>
-            </div>
-            {img_html}
-        </div>
-    </div>
-    
-    <!-- Watermark Spesial -->
-    <div style="position: absolute; bottom: 25px; left: 20px; font-family: 'Press Start 2P', cursive; font-size: 8px; color: #a0a0a0; text-shadow: 1px 1px 0px #ffffff; letter-spacing: 1px;">
-        1 JUNI 2026
-    </div>
-    
-    <!-- Detail Dekorasi Speaker Ala Konsol -->
-    <div style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 6px; transform: rotate(-25deg);">
-        <div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
-        <div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
-        <div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
-        <div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
-    </div>
-    
-    <!-- Garis Lekukan Tengah Bawah -->
-    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px;">
-        <div style="width: 20px; height: 3px; background-color: #c0c0c0; border-radius: 2px;"></div>
-        <div style="width: 20px; height: 3px; background-color: #c0c0c0; border-radius: 2px;"></div>
-    </div>
-
+<div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
+<div style="background-color: #8bac0f; border: 4px solid #0f380f; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
+<div style="text-align: center; color: #0f380f; z-index: 1;">
+<div style="font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 15px; line-height: 1.5;">STAGE<br>KENANGAN</div>
+<div style="font-family: 'Press Start 2P', cursive; font-size: 8px;">(UNDER CONSTRUCTION 🚧)</div>
+</div>
+{img_html}
+</div>
+</div>
+<div style="position: absolute; bottom: 25px; left: 20px; font-family: 'Press Start 2P', cursive; font-size: 8px; color: #a0a0a0; text-shadow: 1px 1px 0px #ffffff; letter-spacing: 1px;">1 JUNI 2026</div>
+<div style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 6px; transform: rotate(-25deg);">
+<div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
+<div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
+<div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
+<div style="width: 5px; height: 35px; background-color: #b0b0b0; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
+</div>
+<div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px;">
+<div style="width: 20px; height: 3px; background-color: #c0c0c0; border-radius: 2px;"></div>
+<div style="width: 20px; height: 3px; background-color: #c0c0c0; border-radius: 2px;"></div>
+</div>
 </div>
 """
         st.markdown(gameboy_html, unsafe_allow_html=True)
