@@ -244,32 +244,38 @@ with layar_utama.container():
             else:
                 st.button("LOCKED X", disabled=True, use_container_width=True)
 
-    # ================= HALAMAN 3 (LILIN OTOMATIS CSS + JS) =================
+    # ================= HALAMAN 3 (LILIN & KUE OTOMATIS) =================
     elif st.session_state.tahap == 3:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 2vh;'>MAKE A WISH & TIUP LILINNYA!</div>", unsafe_allow_html=True)
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 10px; color: #c71585; margin-bottom: 5px;'>(Izinkan akses mikrofon lalu tiup speaker bawah HP-mu)</div>", unsafe_allow_html=True)
 
-        # Skrip HTML untuk Lilin CSS Asli & Deteksi Suara
+        # Skrip HTML untuk Lilin yang Menempel di Atas Kue & Pindah Otomatis
         html_kue = """
         <!DOCTYPE html>
         <html>
         <head>
         <style>
           body { text-align: center; background-color: transparent; overflow: hidden; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace;}
-          .candle-container { position: relative; margin-top: 80px; margin-bottom: 50px; height: 150px; }
+          .party-container { position: relative; margin-top: 60px; margin-bottom: 20px; display: inline-block; }
+          
+          /* Kue Ulang Tahun Emoji */
+          .cake-emoji { font-size: 130px; line-height: 1; filter: drop-shadow(4px 4px 0px #c71585); position: relative; z-index: 2;}
+          
+          /* Lilin CSS */
           .candle {
-            width: 40px; height: 100px;
+            width: 25px; height: 70px;
             background: linear-gradient(to right, #ffb6c1, #ffe4e1 20%, #ffe4e1 80%, #ffb6c1);
-            border-radius: 4px; border: 2px solid #ff69b4; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
-            box-shadow: 0px 5px 0px #c71585;
+            border-radius: 4px; border: 2px solid #ff69b4; 
+            position: absolute; left: 50%; top: -40px; transform: translateX(-50%); z-index: 3;
+            box-shadow: 0px 3px 0px #c71585;
           }
           .wick {
-            width: 4px; height: 15px; background: #333; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); border-radius: 2px;
+            width: 4px; height: 12px; background: #333; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); border-radius: 2px;
           }
           .flame {
-            width: 20px; height: 40px;
+            width: 18px; height: 35px;
             background: radial-gradient(ellipse at bottom, #fff 10%, #fde08b 30%, #ff8c00 70%, transparent 100%);
-            border-radius: 50% 50% 20% 20%; position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            border-radius: 50% 50% 20% 20%; position: absolute; top: -42px; left: 50%; transform: translateX(-50%);
             animation: flicker 0.1s infinite alternate; box-shadow: 0 0 20px #ffaa00, 0 0 40px #ffaa00; transform-origin: bottom center;
           }
           @keyframes flicker {
@@ -280,23 +286,28 @@ with layar_utama.container():
             width: 10px; height: 10px; background: rgba(100,100,100,0.5); border-radius: 50%;
             position: absolute; top: -15px; left: 50%; transform: translateX(-50%); opacity: 0;
           }
+          
+          /* Efek Tiup */
           .blow-out .flame { display: none; }
           .blow-out .smoke { animation: floatUp 2s ease-out forwards; }
           @keyframes floatUp {
             0% { transform: translate(-50%, 0) scale(1); opacity: 1; }
             100% { transform: translate(-50%, -100px) scale(4); opacity: 0; }
           }
-          #status { color: #d81b60; font-weight: bold; font-size: 14px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.5);}
+          
+          #status { color: #d81b60; font-weight: bold; font-size: 14px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.7); margin-top: 10px;}
         </style>
         </head>
         <body>
-          <div class="candle-container" id="candle-wrap">
+          <div class="party-container" id="candle-wrap">
             <div class="candle">
               <div class="wick"></div>
               <div class="flame" id="flame"></div>
               <div class="smoke"></div>
             </div>
+            <div class="cake-emoji">🎂</div>
           </div>
+          <br>
           <div id="status">⏳ Menunggu akses mikrofon...</div>
 
           <script>
@@ -321,17 +332,17 @@ with layar_utama.container():
                   for (let i = 0; i < array.length; i++) { values += (array[i]); }
                   let average = values / array.length;
                   
-                  // Jika tiupan keras (suara tinggi)
+                  // Deteksi tiupan (suara kencang)
                   if (average > 60) { 
                     document.getElementById('candle-wrap').classList.add('blow-out');
                     document.getElementById('status').innerText = "✨ YAY! LILIN MATI!";
                     stream.getTracks().forEach(track => track.stop()); // Matikan mic
                     
-                    // Delay 2 detik untuk efek asap, lalu otomatis klik tombol Streamlit
+                    // Delay 2 detik agar asap terlihat, lalu klik otomatis tombol yang disembunyikan
                     setTimeout(function() {
                         let buttons = window.parent.document.querySelectorAll('button');
                         buttons.forEach(b => {
-                            if(b.innerText === 'LANJUTKAN >') {
+                            if(b.innerText.includes('LANJUTKAN')) {
                                 b.click();
                             }
                         });
@@ -340,20 +351,20 @@ with layar_utama.container():
                 }
               })
               .catch(function(err) {
-                document.getElementById('status').innerText = "Mic tidak diizinkan. Silakan klik tombol manual di bawah.";
+                document.getElementById('status').innerText = "Mic tidak diizinkan. Mohon refresh web ini dan izinkan microphone!";
               });
           </script>
         </body>
         </html>
         """
-        components.html(html_kue, height=350)
+        components.html(html_kue, height=400)
         
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            # Tombol ini hanya cadangan, akan ter-klik otomatis oleh Javascript
-            if st.button("LANJUTKAN >", use_container_width=True):
-                st.session_state.tahap = 4
-                st.rerun()
+        # Tombol "LANJUTKAN" disembunyikan secara visual agar layar terlihat bersih
+        st.markdown("<div style='opacity: 0; position: absolute; z-index: -1;'>", unsafe_allow_html=True)
+        if st.button("LANJUTKAN"):
+            st.session_state.tahap = 4
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # ================= HALAMAN 4 (ANIMASI LEVEL UP) =================
     elif st.session_state.tahap == 4:
