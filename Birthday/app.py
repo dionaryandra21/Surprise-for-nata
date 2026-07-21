@@ -9,7 +9,6 @@ import base64
 DIR_SAAT_INI = os.path.dirname(os.path.abspath(__file__))
 FILE_LAGU = os.path.join(DIR_SAAT_INI, "lagu.mp3")
 FILE_LEVELUP = os.path.join(DIR_SAAT_INI, "levelup.mp3")
-FILE_FOTO = os.path.join(DIR_SAAT_INI, "foto.jpg")
 
 # Mengatur konfigurasi halaman
 st.set_page_config(page_title="Surat Spesial", page_icon="💌")
@@ -202,9 +201,13 @@ awan_html = f"""
 """
 st.markdown(awan_html, unsafe_allow_html=True)
 
-# ---------------- LOGIKA PINDAH HALAMAN ----------------
+# ---------------- LOGIKA STATE PENYIMPANAN ----------------
 if 'tahap' not in st.session_state:
     st.session_state.tahap = 1
+
+# Indikator urutan foto (1 sampai 10)
+if 'foto_index' not in st.session_state:
+    st.session_state.foto_index = 1
 
 # --- LOGIKA MUSIK AMAN (Dimulai setelah kue/saat surat muncul) ---
 if st.session_state.tahap >= 5:
@@ -249,7 +252,6 @@ with layar_utama.container():
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 2vh;'>MAKE A WISH & TIUP LILINNYA!</div>", unsafe_allow_html=True)
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 10px; color: #c71585; margin-bottom: 5px;'>(Izinkan akses mikrofon lalu tiup speaker bawah HP-mu)</div>", unsafe_allow_html=True)
 
-        # Menghilangkan SELURUH tombol yang ada di Halaman 3 secara paksa 
         st.markdown("""
         <style>
         div[data-testid="stButton"] {
@@ -258,7 +260,6 @@ with layar_utama.container():
         </style>
         """, unsafe_allow_html=True)
 
-        # Skrip HTML untuk Kue Desain Asli, Lilin Menempel, dan Pindah Otomatis
         html_kue = """
         <!DOCTYPE html>
         <html>
@@ -267,7 +268,6 @@ with layar_utama.container():
           body { text-align: center; background-color: transparent; overflow: hidden; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace;}
           .party-container { position: relative; margin-top: 100px; display: inline-block; }
           
-          /* KUE ULANG TAHUN CSS MURNI */
           .cake {
             width: 180px; height: 90px; background: #ffb6c1; position: relative; margin: 0 auto;
             border-radius: 10px 10px 5px 5px; border: 4px solid #c71585; box-shadow: 0 8px 0 #c71585;
@@ -280,14 +280,12 @@ with layar_utama.container():
             width: 220px; height: 15px; background: #f8f9fa; border: 4px solid #c71585; 
             border-radius: 20px; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); box-shadow: 0 5px 0 #dcdcdc;
           }
-          /* Meses/Sprinkles */
           .sprinkle { width: 8px; height: 4px; border-radius: 4px; position: absolute; }
           .s1 { background: #ff69b4; top: 15px; left: 20px; transform: rotate(30deg); }
           .s2 { background: #00ced1; top: 10px; left: 60px; transform: rotate(-20deg); }
           .s3 { background: #ffd700; top: 20px; left: 100px; transform: rotate(45deg); }
           .s4 { background: #32cd32; top: 12px; left: 140px; transform: rotate(-45deg); }
           
-          /* LILIN MENANCAP DI KUE */
           .candle {
             width: 20px; height: 50px;
             background: repeating-linear-gradient(45deg, #ffffff, #ffffff 5px, #ff1493 5px, #ff1493 10px);
@@ -312,7 +310,6 @@ with layar_utama.container():
             position: absolute; top: -15px; left: 50%; transform: translateX(-50%); opacity: 0;
           }
           
-          /* Efek Tiup */
           .blow-out .flame { display: none; }
           .blow-out .smoke { animation: floatUp 2s ease-out forwards; }
           @keyframes floatUp {
@@ -365,13 +362,11 @@ with layar_utama.container():
                   for (let i = 0; i < array.length; i++) { values += (array[i]); }
                   let average = values / array.length;
                   
-                  // Deteksi tiupan (suara kencang)
                   if (average > 60) { 
                     document.getElementById('candle-wrap').classList.add('blow-out');
                     document.getElementById('status').innerText = "✨ YAY! LILIN MATI! TUNGGU BENTAR...";
-                    stream.getTracks().forEach(track => track.stop()); // Matikan mic
+                    stream.getTracks().forEach(track => track.stop()); 
                     
-                    // Delay 2 detik agar asap terlihat, lalu klik otomatis tombol tak kasat mata
                     setTimeout(function() {
                         let buttons = window.parent.document.querySelectorAll('button');
                         buttons.forEach(b => {
@@ -392,11 +387,11 @@ with layar_utama.container():
         """
         components.html(html_kue, height=450)
         
-        # Tombol ini ada di kode, tapi HILANG di layar berkat kode CSS di atasnya.
-        # Javascript yang akan diam-diam menekannya!
+        st.markdown("<div style='opacity: 0; position: absolute; z-index: -1;'>", unsafe_allow_html=True)
         if st.button("LANJUTKAN"):
             st.session_state.tahap = 4
             st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # ================= HALAMAN 4 (ANIMASI LEVEL UP) =================
     elif st.session_state.tahap == 4:
@@ -463,40 +458,55 @@ with layar_utama.container():
                 st.session_state.tahap = 5
                 st.rerun()
 
-    # ================= HALAMAN 7 (KONSOL FOTO) =================
+    # ================= HALAMAN 7 (KONSOL FOTO - SLIDESHOW 10 FOTO) =================
     elif st.session_state.tahap == 7:
         
         st.markdown("""
         <style>
         div[data-testid="stHorizontalBlock"] {
-            margin-top: -180px !important;
             position: relative;
             z-index: 10;
             width: 280px !important;
             margin-left: auto !important;
             margin-right: auto !important;
         }
+        /* Menarik baris tombol FOTO ke atas masuk ke dalam area abu-abu konsol */
+        div[data-testid="stHorizontalBlock"]:nth-of-type(1) {
+            margin-top: -180px !important;
+        }
+        /* Menyesuaikan baris tombol STAGE di bawahnya */
+        div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
+            margin-top: 10px !important;
+        }
         div[data-testid="stHorizontalBlock"] button {
             border-radius: 20px !important; 
             box-shadow: 4px 4px 0px #c71585 !important;
             margin-bottom: 15px !important;
+            padding: 10px 10px !important;
         }
         </style>
         """, unsafe_allow_html=True)
         
+        # Mengecek dan memuat foto sesuai index saat ini (foto1.jpg - foto10.jpg)
+        nama_file_sekarang = f"foto{st.session_state.foto_index}.jpg"
+        path_foto = os.path.join(DIR_SAAT_INI, nama_file_sekarang)
+        
         img_html = ""
-        if os.path.exists(FILE_FOTO):
-            with open(FILE_FOTO, "rb") as image_file:
+        if os.path.exists(path_foto):
+            with open(path_foto, "rb") as image_file:
                 encoded_img = base64.b64encode(image_file.read()).decode()
             img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
+        else:
+            # Jika foto ke-X belum diupload, tampilkan layar hitam
+            img_html = f'<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background-color: #222; color: #fff; font-family: \'Press Start 2P\', cursive; font-size: 10px;">{nama_file_sekarang}<br>KOSONG</div>'
 
+        # Desain Gameboy yang diperbesar sedikit tingginya agar tombol muat
         gameboy_html = f"""
-<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 430px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
+<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 500px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px;">
 <div style="background-color: #8bac0f; border: 4px solid #0f380f; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
 <div style="text-align: center; color: #0f380f; z-index: 1;">
 <div style="font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 15px; line-height: 1.5;">STAGE<br>KENANGAN</div>
-<div style="font-family: 'Press Start 2P', cursive; font-size: 8px;">(UNDER CONSTRUCTION 🚧)</div>
 </div>
 {img_html}
 </div>
@@ -516,12 +526,27 @@ with layar_utama.container():
 """
         st.markdown(gameboy_html, unsafe_allow_html=True)
         
-        col1, col2, col3 = st.columns([1, 0.1, 1])
-        with col1:
+        # BARIS 1: Navigasi Ganti Foto
+        col_f1, col_f2, col_f3 = st.columns([1, 1, 1])
+        with col_f1:
+            if st.button("⏪ FOTO", use_container_width=True):
+                st.session_state.foto_index = st.session_state.foto_index - 1 if st.session_state.foto_index > 1 else 10
+                st.rerun()
+        with col_f2:
+            # Menampilkan Indikator Foto (misal: 1/10)
+            st.markdown(f"<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 11px; color: #ff1493; margin-top: 15px;'>{st.session_state.foto_index}/10</div>", unsafe_allow_html=True)
+        with col_f3:
+            if st.button("FOTO ⏩", use_container_width=True):
+                st.session_state.foto_index = st.session_state.foto_index + 1 if st.session_state.foto_index < 10 else 1
+                st.rerun()
+
+        # BARIS 2: Navigasi Ganti Halaman
+        col_s1, col_s2, col_s3 = st.columns([1, 0.1, 1])
+        with col_s1:
             if st.button("< BACK", use_container_width=True):
                 st.session_state.tahap = 6
                 st.rerun()
-        with col3:
+        with col_s3:
             if st.button("NEXT >", use_container_width=True):
                 st.session_state.tahap = 8 
                 st.rerun()
