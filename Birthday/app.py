@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import random
 import time
 import os
@@ -205,8 +206,8 @@ st.markdown(awan_html, unsafe_allow_html=True)
 if 'tahap' not in st.session_state:
     st.session_state.tahap = 1
 
-# --- LOGIKA MUSIK AMAN ---
-if st.session_state.tahap >= 4:
+# --- LOGIKA MUSIK AMAN (Dimulai setelah kue/saat surat muncul) ---
+if st.session_state.tahap >= 5:
     if os.path.exists(FILE_LAGU):
         st.audio(FILE_LAGU, format="audio/mpeg", autoplay=True)
 
@@ -238,13 +239,95 @@ with layar_utama.container():
             
             if jawaban:
                 if st.button("START >", use_container_width=True):
-                    st.session_state.tahap = 3
+                    st.session_state.tahap = 3 # Lanjut ke Kue
                     st.rerun() 
             else:
                 st.button("LOCKED X", disabled=True, use_container_width=True)
 
-    # ================= HALAMAN 3 =================
+    # ================= HALAMAN 3 (FITUR BARU: TIUP LILIN MIC) =================
     elif st.session_state.tahap == 3:
+        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 5vh;'>TIUP LILINNYA!</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 10px; color: #c71585; margin-bottom: 5px;'>(Izinkan akses mikrofon dan tiup ke arah HP-mu!)</div>", unsafe_allow_html=True)
+
+        # Skrip HTML/JS untuk deteksi tiupan suara
+        html_kue = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <style>
+          body { font-family: 'Courier New', Courier, monospace; text-align: center; background-color: transparent; overflow: hidden; margin: 0; padding: 0;}
+          .cake-container { position: relative; display: inline-block; margin-top: 40px; }
+          .cake { font-size: 120px; filter: drop-shadow(4px 4px 0px #c71585); }
+          @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+          }
+          .flame { 
+            font-size: 50px; position: absolute; top: -35px; left: 50%; transform: translateX(-50%); 
+            animation: flicker 0.5s infinite alternate; transition: opacity 0.3s ease-out; filter: drop-shadow(0px 0px 10px #ff69b4);
+          }
+          .flame.out { opacity: 0; animation: none; }
+          #status { color: #d81b60; font-weight: bold; margin-top: 30px; font-size: 16px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.5);}
+        </style>
+        </head>
+        <body>
+          <div class="cake-container">
+            <div class="flame" id="flame">🔥</div>
+            <div class="cake">🎂</div>
+          </div>
+          <br>
+          <div id="status">⏳ Menunggu akses mikrofon...</div>
+
+          <script>
+            navigator.mediaDevices.getUserMedia({ audio: true })
+              .then(function(stream) {
+                document.getElementById('status').innerText = "🎤 Mic aktif! Ayo tiup kenceng-kenceng!";
+                let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                let analyser = audioContext.createAnalyser();
+                let microphone = audioContext.createMediaStreamSource(stream);
+                let scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+
+                analyser.smoothingTimeConstant = 0.8;
+                analyser.fftSize = 1024;
+
+                microphone.connect(analyser);
+                analyser.connect(scriptProcessor);
+                scriptProcessor.connect(audioContext.destination);
+
+                scriptProcessor.onaudioprocess = function() {
+                  let array = new Uint8Array(analyser.frequencyBinCount);
+                  analyser.getByteFrequencyData(array);
+                  let values = 0;
+                  for (let i = 0; i < array.length; i++) { values += (array[i]); }
+                  let average = values / array.length;
+                  
+                  // Deteksi suara keras (tiupan angin ke mic)
+                  if (average > 60) { 
+                    document.getElementById('flame').classList.add('out');
+                    document.getElementById('status').innerText = "YAY! LILIN MATI! KLIK TOMBOL DI BAWAH!";
+                    stream.getTracks().forEach(track => track.stop()); // Matikan mic setelah berhasil
+                  }
+                }
+              })
+              .catch(function(err) {
+                document.getElementById('status').innerText = "Gagal akses mic :( Pura-pura tiup aja lalu klik tombol di bawah!";
+              });
+          </script>
+        </body>
+        </html>
+        """
+        components.html(html_kue, height=350)
+        
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            # Tombol selalu ada jaga-jaga kalau HP-nya memblokir izin mikrofon
+            if st.button("LANJUT >", use_container_width=True):
+                st.session_state.tahap = 4
+                st.rerun()
+
+    # ================= HALAMAN 4 (ANIMASI LEVEL UP) =================
+    elif st.session_state.tahap == 4:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; margin-top: 35vh; text-shadow: 4px 4px 0px #ffffff;'>LEVEL 25...</div>", unsafe_allow_html=True)
         time.sleep(1.5) 
         
@@ -256,11 +339,11 @@ with layar_utama.container():
                 st.audio(FILE_LEVELUP, format="audio/mpeg", autoplay=True) 
         time.sleep(3) 
         
-        st.session_state.tahap = 4
+        st.session_state.tahap = 5
         st.rerun()
 
-    # ================= HALAMAN 4 =================
-    elif st.session_state.tahap == 4:
+    # ================= HALAMAN 5 (SURAT UTAMA) =================
+    elif st.session_state.tahap == 5:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-bottom: 20px; line-height: 1.5;'>STAGE CLEAR:<br><br>LEVEL UP!!! 💖🥳</div>", unsafe_allow_html=True)
         
         st.balloons()
@@ -285,11 +368,11 @@ with layar_utama.container():
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("NEXT STAGE >", use_container_width=True):
-                st.session_state.tahap = 5
+                st.session_state.tahap = 6
                 st.rerun()
 
-    # ================= HALAMAN 5 =================
-    elif st.session_state.tahap == 5:
+    # ================= HALAMAN 6 (MENU PILIHAN) =================
+    elif st.session_state.tahap == 6:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; text-shadow: 4px 4px 0px #ffffff; margin-top: 10vh; margin-bottom: 40px; line-height: 1.5;'>PILIH STAGE 🎮</div>", unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
@@ -298,18 +381,18 @@ with layar_utama.container():
             st.write("")
             
             if st.button("📸 KENANGAN KITA", use_container_width=True):
-                st.session_state.tahap = 6
+                st.session_state.tahap = 7
                 st.rerun()
                 
             st.write("")
             st.write("")
             
             if st.button("< KEMBALI", use_container_width=True):
-                st.session_state.tahap = 4
+                st.session_state.tahap = 5
                 st.rerun()
 
-    # ================= HALAMAN 6 =================
-    elif st.session_state.tahap == 6:
+    # ================= HALAMAN 7 (KONSOL FOTO) =================
+    elif st.session_state.tahap == 7:
         
         st.markdown("""
         <style>
@@ -366,19 +449,19 @@ with layar_utama.container():
         col1, col2, col3 = st.columns([1, 0.1, 1])
         with col1:
             if st.button("< BACK", use_container_width=True):
-                st.session_state.tahap = 5
+                st.session_state.tahap = 6
                 st.rerun()
         with col3:
             if st.button("NEXT >", use_container_width=True):
-                st.session_state.tahap = 7 
+                st.session_state.tahap = 8 
                 st.rerun()
                 
-    # ================= HALAMAN 7 =================
-    elif st.session_state.tahap == 7:
+    # ================= HALAMAN 8 (TO BE CONTINUED) =================
+    elif st.session_state.tahap == 8:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 15vh; margin-bottom: 30px; line-height: 1.5;'>TO BE CONTINUED... ✨</div>", unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("< KEMBALI", use_container_width=True):
-                st.session_state.tahap = 6
+                st.session_state.tahap = 7
                 st.rerun()
