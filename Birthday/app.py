@@ -481,9 +481,9 @@ with layar_utama.container():
             font-size: 11px !important;
         }
 
-        /* Baris ke-2 HANYA untuk tombol BACK (dibiarkan di luar/bawah konsol) */
+        /* Baris ke-2 HANYA untuk tombol KEMBALI (didorong ke bawah konsol) */
         div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
-            margin-top: 30px !important;
+            margin-top: 130px !important;
             position: relative;
             z-index: 10;
         }
@@ -512,7 +512,7 @@ with layar_utama.container():
 {img_html}
 </div>
 </div>
-<!-- Indikator 1/10 disisipkan ke dalam HTML agar aman dari tabrakan CSS -->
+<!-- Indikator 1/10 disisipkan ke dalam HTML -->
 <div style="text-align: center; margin-top: 15px; font-family: 'Press Start 2P', cursive; font-size: 12px; color: #ff1493;">{st.session_state.foto_index}/10</div>
 
 <div style="position: absolute; bottom: 25px; left: 20px; font-family: 'Press Start 2P', cursive; font-size: 9px; color: #9c9c9c; font-weight: bold; letter-spacing: 1px;">1 JUNI 2026</div>
