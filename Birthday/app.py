@@ -463,30 +463,40 @@ with layar_utama.container():
         
         st.markdown("""
         <style>
-        /* 1. Baris Tombol FOTO (Ditarik naik ke dalam Gameboy) */
-        div[data-testid="stHorizontalBlock"]:first-of-type {
+        /* Baris ke-1: Tombol FOTO (Ditarik naik ke dalam layar konsol) */
+        div[data-testid="stHorizontalBlock"]:nth-of-type(1) {
             position: relative;
             z-index: 10;
             width: 270px !important;
             margin-left: auto !important;
             margin-right: auto !important;
-            margin-top: -115px !important; 
+            margin-top: -150px !important; 
         }
-        div[data-testid="stHorizontalBlock"]:first-of-type button {
+        div[data-testid="stHorizontalBlock"]:nth-of-type(1) button {
             border-radius: 15px !important; 
             box-shadow: 4px 4px 0px #c71585 !important;
             padding: 10px 5px !important;
         }
-        div[data-testid="stHorizontalBlock"]:first-of-type button p {
+        div[data-testid="stHorizontalBlock"]:nth-of-type(1) button p {
             font-size: 11px !important;
         }
         
-        /* 2. Baris Tombol KEMBALI (Didorong kuat ke luar/bawah Gameboy) */
-        /* Simbol ~ memastikan hanya baris kedua yang ditendang ke bawah */
-        div[data-testid="stHorizontalBlock"]:first-of-type ~ div[data-testid="stHorizontalBlock"] {
-            margin-top: 140px !important;
+        /* Baris ke-2: Tombol BACK (Ditaruh rapi tepat di bawah tombol foto) */
+        div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
             position: relative;
             z-index: 10;
+            width: 270px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            margin-top: 15px !important; 
+        }
+        div[data-testid="stHorizontalBlock"]:nth-of-type(2) button {
+            border-radius: 15px !important; 
+            box-shadow: 4px 4px 0px #c71585 !important;
+            padding: 10px 5px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:nth-of-type(2) button p {
+            font-size: 11px !important;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -503,8 +513,9 @@ with layar_utama.container():
         else:
             img_html = f'<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background-color: #222; color: #fff; font-family: \'Press Start 2P\', cursive; font-size: 10px; text-align: center;">{nama_file_sekarang}<br><br>KOSONG</div>'
 
+        # Konsol diperbesar sedikit menjadi 460px agar lega
         gameboy_html = f"""
-<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 430px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
+<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 460px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px; position: relative;">
 <div style="background-color: #8bac0f; border: 4px solid #0f380f; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
 <div style="text-align: center; color: #0f380f; z-index: 1;">
@@ -531,7 +542,7 @@ with layar_utama.container():
 """
         st.markdown(gameboy_html, unsafe_allow_html=True)
         
-        # BARIS 1: Tombol Navigasi Foto (Ditarik ke dalam konsol)
+        # BARIS 1: Tombol Navigasi Foto 
         col1, col2 = st.columns(2)
         with col1:
             if st.button("⏪ FOTO", use_container_width=True):
@@ -542,10 +553,10 @@ with layar_utama.container():
                 st.session_state.foto_index = st.session_state.foto_index + 1 if st.session_state.foto_index < 10 else 1
                 st.rerun()
 
-        # BARIS 2: Tombol KEMBALI (Berada dengan aman di luar/bawah konsol)
+        # BARIS 2: Tombol BACK (Sekarang menyatu rapi di dalam konsol)
         col_b1, col_b2, col_b3 = st.columns([1, 2, 1])
         with col_b2:
-            if st.button("< KEMBALI", use_container_width=True):
+            if st.button("< BACK", use_container_width=True):
                 st.session_state.tahap = 6
                 st.rerun()
                 
