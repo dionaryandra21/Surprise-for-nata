@@ -481,9 +481,11 @@ with layar_utama.container():
             font-size: 11px !important;
         }
         
-        /* Baris ke-2 (Tombol Kembali) dipusatkan di bawah konsol */
+        /* Baris ke-2 HANYA untuk Tombol Kembali (didorong super jauh ke bawah konsol) */
         div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
-            margin-top: 0px !important;
+            margin-top: 160px !important;
+            position: relative;
+            z-index: 10;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -538,9 +540,6 @@ with layar_utama.container():
             if st.button("FOTO ⏩", use_container_width=True):
                 st.session_state.foto_index = st.session_state.foto_index + 1 if st.session_state.foto_index < 10 else 1
                 st.rerun()
-                
-        # --- GANJELAN KASAT MATA (Agar tombol bawah benar-benar terpisah) ---
-        st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
 
         # BARIS 2: Tombol KEMBALI (Berada dengan aman di luar/bawah konsol)
         col_b1, col_b2, col_b3 = st.columns([1, 2, 1])
