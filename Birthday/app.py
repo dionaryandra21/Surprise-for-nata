@@ -463,8 +463,8 @@ with layar_utama.container():
         
         st.markdown("""
         <style>
-        /* Baris ke-1 HANYA untuk tombol FOTO (ditarik ke dalam konsol) */
-        div[data-testid="stHorizontalBlock"]:nth-of-type(1) {
+        /* 1. Baris Tombol FOTO (Ditarik naik ke dalam Gameboy) */
+        div[data-testid="stHorizontalBlock"]:first-of-type {
             position: relative;
             z-index: 10;
             width: 270px !important;
@@ -472,18 +472,19 @@ with layar_utama.container():
             margin-right: auto !important;
             margin-top: -115px !important; 
         }
-        div[data-testid="stHorizontalBlock"]:nth-of-type(1) button {
+        div[data-testid="stHorizontalBlock"]:first-of-type button {
             border-radius: 15px !important; 
             box-shadow: 4px 4px 0px #c71585 !important;
             padding: 10px 5px !important;
         }
-        div[data-testid="stHorizontalBlock"]:nth-of-type(1) button p {
+        div[data-testid="stHorizontalBlock"]:first-of-type button p {
             font-size: 11px !important;
         }
         
-        /* Baris ke-2 HANYA untuk Tombol Kembali (didorong super jauh ke bawah konsol) */
-        div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
-            margin-top: 160px !important;
+        /* 2. Baris Tombol KEMBALI (Didorong kuat ke luar/bawah Gameboy) */
+        /* Simbol ~ memastikan hanya baris kedua yang ditendang ke bawah */
+        div[data-testid="stHorizontalBlock"]:first-of-type ~ div[data-testid="stHorizontalBlock"] {
+            margin-top: 140px !important;
             position: relative;
             z-index: 10;
         }
