@@ -470,7 +470,7 @@ with layar_utama.container():
             width: 270px !important;
             margin-left: auto !important;
             margin-right: auto !important;
-            margin-top: -120px !important; 
+            margin-top: -115px !important; 
         }
         div[data-testid="stHorizontalBlock"]:nth-of-type(1) button {
             border-radius: 15px !important; 
@@ -480,12 +480,10 @@ with layar_utama.container():
         div[data-testid="stHorizontalBlock"]:nth-of-type(1) button p {
             font-size: 11px !important;
         }
-
-        /* Baris ke-2 HANYA untuk tombol KEMBALI (didorong ke bawah konsol) */
+        
+        /* Baris ke-2 (Tombol Kembali) dipusatkan di bawah konsol */
         div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
-            margin-top: 130px !important;
-            position: relative;
-            z-index: 10;
+            margin-top: 0px !important;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -541,7 +539,10 @@ with layar_utama.container():
                 st.session_state.foto_index = st.session_state.foto_index + 1 if st.session_state.foto_index < 10 else 1
                 st.rerun()
                 
-        # BARIS 2: Tombol KEMBALI (Berada di luar konsol)
+        # --- GANJELAN KASAT MATA (Agar tombol bawah benar-benar terpisah) ---
+        st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
+
+        # BARIS 2: Tombol KEMBALI (Berada dengan aman di luar/bawah konsol)
         col_b1, col_b2, col_b3 = st.columns([1, 2, 1])
         with col_b2:
             if st.button("< KEMBALI", use_container_width=True):
