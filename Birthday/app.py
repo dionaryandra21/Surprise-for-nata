@@ -463,40 +463,23 @@ with layar_utama.container():
         
         st.markdown("""
         <style>
-        /* Baris ke-1: Tombol FOTO (Dinaikkan lebih tinggi ke dalam layar) */
-        div[data-testid="stHorizontalBlock"]:nth-of-type(1) {
+        /* Trik 'Transform': Menggeser KEDUA baris tombol secara BERSAMAAN 
+           tanpa saling bertabrakan atau menumpuk (100% Fix) */
+        div[data-testid="stHorizontalBlock"] {
+            transform: translateY(-170px);
             position: relative;
             z-index: 10;
             width: 270px !important;
             margin-left: auto !important;
             margin-right: auto !important;
-            margin-top: -180px !important; /* Ditarik lebih ke atas */
-            margin-bottom: 25px !important; /* Diberi benteng jarak pemisah ke bawah */
         }
-        div[data-testid="stHorizontalBlock"]:nth-of-type(1) button {
+        div[data-testid="stHorizontalBlock"] button {
             border-radius: 15px !important; 
             box-shadow: 4px 4px 0px #c71585 !important;
             padding: 10px 5px !important;
+            margin-bottom: 5px !important;
         }
-        div[data-testid="stHorizontalBlock"]:nth-of-type(1) button p {
-            font-size: 11px !important;
-        }
-        
-        /* Baris ke-2: Tombol BACK (Didorong turun agar tidak nyatu) */
-        div[data-testid="stHorizontalBlock"]:nth-of-type(2) {
-            position: relative;
-            z-index: 10;
-            width: 270px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            margin-top: 15px !important; /* Menjauh dari tombol foto */
-        }
-        div[data-testid="stHorizontalBlock"]:nth-of-type(2) button {
-            border-radius: 15px !important; 
-            box-shadow: 4px 4px 0px #c71585 !important;
-            padding: 10px 5px !important;
-        }
-        div[data-testid="stHorizontalBlock"]:nth-of-type(2) button p {
+        div[data-testid="stHorizontalBlock"] button p {
             font-size: 11px !important;
         }
         </style>
@@ -514,9 +497,9 @@ with layar_utama.container():
         else:
             img_html = f'<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background-color: #222; color: #fff; font-family: \'Press Start 2P\', cursive; font-size: 10px; text-align: center;">{nama_file_sekarang}<br><br>KOSONG</div>'
 
-        # Konsol Gameboy
+        # Konsol Gameboy dipertinggi menjadi 480px agar ruang bawahnya super lega
         gameboy_html = f"""
-<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 460px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
+<div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 480px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px; position: relative;">
 <div style="background-color: #8bac0f; border: 4px solid #0f380f; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
 <div style="text-align: center; color: #0f380f; z-index: 1;">
@@ -526,7 +509,7 @@ with layar_utama.container():
 </div>
 </div>
 <!-- Indikator 1/10 disisipkan ke dalam HTML -->
-<div style="text-align: center; margin-top: 15px; font-family: 'Press Start 2P', cursive; font-size: 12px; color: #ff1493;">{st.session_state.foto_index}/10</div>
+<div style="text-align: center; margin-top: 20px; font-family: 'Press Start 2P', cursive; font-size: 12px; color: #ff1493;">{st.session_state.foto_index}/10</div>
 
 <div style="position: absolute; bottom: 25px; left: 20px; font-family: 'Press Start 2P', cursive; font-size: 9px; color: #9c9c9c; font-weight: bold; letter-spacing: 1px;">1 JUNI 2026</div>
 <div style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 6px; transform: rotate(-25deg);">
@@ -560,7 +543,7 @@ with layar_utama.container():
             if st.button("< BACK", use_container_width=True):
                 st.session_state.tahap = 6
                 st.rerun()
-                
+
     # ================= HALAMAN 8 =================
     elif st.session_state.tahap == 8:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 15vh; margin-bottom: 30px; line-height: 1.5;'>TO BE CONTINUED... ✨</div>", unsafe_allow_html=True)
