@@ -485,15 +485,16 @@ with layar_utama.container():
         </style>
         """, unsafe_allow_html=True)
         
-        # Mengecek dan memuat foto sesuai index saat ini
-        nama_file_sekarang = f"foto{st.session_state.foto_index}.jpg"
+        # Mengecek dan memuat foto sesuai index saat ini (SUDAH DIUBAH KE .png)
+        nama_file_sekarang = f"foto{st.session_state.foto_index}.png"
         path_foto = os.path.join(DIR_SAAT_INI, nama_file_sekarang)
         
         img_html = ""
         if os.path.exists(path_foto):
             with open(path_foto, "rb") as image_file:
                 encoded_img = base64.b64encode(image_file.read()).decode()
-            img_html = f'<img src="data:image/jpeg;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
+            # SUDAH DIUBAH KE image/png
+            img_html = f'<img src="data:image/png;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
         else:
             img_html = f'<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background-color: #222; color: #fff; font-family: \'Press Start 2P\', cursive; font-size: 10px; text-align: center;">{nama_file_sekarang}<br><br>KOSONG</div>'
 
