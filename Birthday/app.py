@@ -444,7 +444,7 @@ with layar_utama.container():
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.link_button("💬 CHAT DION", "https://wa.me/6281234567890?text=Halo%20sayang,%20aku%20udah%20siap%20nih%20buat%20ambil%20kuenya!", use_container_width=True)
+            st.link_button("💬 CEK CAKE MU !!! ", "https://wa.me/6285778103534?text=Halo Sayang, I LOVE YOU TOO SO MUCH <3 ", use_container_width=True)
             st.write("")
             
             if st.button("📸 KENANGAN KITA", use_container_width=True):
