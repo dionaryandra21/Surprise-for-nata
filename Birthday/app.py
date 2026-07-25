@@ -18,6 +18,13 @@ css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
+/* MENGHILANGKAN HEADER PUTIH BAWAAN STREAMLIT */
+[data-testid="stHeader"] {
+    display: none !important;
+}
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
 html, body, [class*="css"], p, div, label, h1, h2, h3 {
     font-family: 'Press Start 2P', cursive !important;
     color: #d81b60 !important;
