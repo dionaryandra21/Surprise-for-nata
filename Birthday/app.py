@@ -9,6 +9,7 @@ import base64
 DIR_SAAT_INI = os.path.dirname(os.path.abspath(__file__))
 FILE_LAGU = os.path.join(DIR_SAAT_INI, "lagu.mp3")
 FILE_LEVELUP = os.path.join(DIR_SAAT_INI, "levelup.mp3")
+FILE_UCAPAN = os.path.join(DIR_SAAT_INI, "ucapan.mp3") # File audio ucapan baru
 
 # Mengatur konfigurasi halaman
 st.set_page_config(page_title="Surat Spesial", page_icon="💌")
@@ -89,15 +90,11 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
 }
 
 .stRadio > div { gap: 15px; }
-
 .stRadio [role="radio"] div:first-child,
 .stRadio [role="radio"] svg,
 .stRadio [role="radio"] input,
-.stRadio span[data-baseweb="radio"] > div:first-child { 
-    display: none !important; 
-}
+.stRadio span[data-baseweb="radio"] > div:first-child { display: none !important; }
 .stRadio [data-baseweb="radio"] { background: transparent !important; border: none !important; }
-
 .stRadio [role="radio"] {
     background-color: #ffb6c1 !important;
     border: 4px solid #ffffff !important;
@@ -108,12 +105,8 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
 }
 .stRadio [role="radio"] p {
     font-family: 'Press Start 2P', cursive !important;
-    font-size: 14px !important;
-    color: #c71585 !important;
-    text-align: center;
-    line-height: 1.5;
+    font-size: 14px !important; color: #c71585 !important; text-align: center; line-height: 1.5;
 }
-
 .stRadio [role="radio"][aria-checked="true"] {
     background-color: #ff1493 !important;
     transform: translate(6px, 6px) !important;
@@ -121,19 +114,13 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
     border-color: #ffb6c1 !important;
 }
 .stRadio [role="radio"][aria-checked="true"] p {
-    color: white !important;
-    text-shadow: 2px 2px 0px #c71585 !important;
+    color: white !important; text-shadow: 2px 2px 0px #c71585 !important;
 }
 
 .block-container {
-    animation: fadeInPage 1.2s ease-in-out;
-    position: relative;
-    z-index: 1;
+    animation: fadeInPage 1.2s ease-in-out; position: relative; z-index: 1;
 }
-@keyframes fadeInPage {
-    0% { opacity: 0; transform: scale(0.95); }
-    100% { opacity: 1; transform: scale(1); }
-}
+@keyframes fadeInPage { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
 .hujan-love {
     position: fixed; top: -10vh; font-size: 30px;
@@ -141,7 +128,17 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
 }
 @keyframes fall { to { transform: translateY(110vh); } }
 
+/* Menghilangkan audio default (untuk background music), tapi memunculkan audio ucapan */
 audio { display: none !important; }
+audio.pesan-suara { 
+    display: block !important; 
+    width: 100%; 
+    margin-top: 15px; 
+    margin-bottom: 20px;
+    outline: none;
+    border-radius: 5px;
+    box-shadow: 4px 4px 0px #ffb6c1;
+}
 
 .kertas-surat {
     background-color: #ffffff; padding: 30px; 
@@ -192,10 +189,7 @@ audio { display: none !important; }
 .c19 { top: 70%; font-size: 45px; animation-duration: 55s; animation-delay: -20s; }
 .c20 { top: 90%; font-size: 70px; animation-duration: 50s; animation-delay: -15s; }
 
-@keyframes moveClouds {
-    0% { transform: translateX(-15vw); }
-    100% { transform: translateX(110vw); }
-}
+@keyframes moveClouds { 0% { transform: translateX(-15vw); } 100% { transform: translateX(110vw); } }
 </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -212,11 +206,10 @@ st.markdown(awan_html, unsafe_allow_html=True)
 if 'tahap' not in st.session_state:
     st.session_state.tahap = 1
 
-# Indikator urutan foto (1 sampai 10)
 if 'foto_index' not in st.session_state:
     st.session_state.foto_index = 1
 
-# --- LOGIKA MUSIK AMAN (Dimulai setelah kue/saat surat muncul) ---
+# --- LOGIKA MUSIK BACKGROUND AMAN ---
 if st.session_state.tahap >= 5:
     if os.path.exists(FILE_LAGU):
         st.audio(FILE_LAGU, format="audio/mpeg", autoplay=True)
@@ -228,7 +221,6 @@ with layar_utama.container():
     if st.session_state.tahap == 1:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 20px; margin-top: 5vh; line-height: 1.8; color: #ff1493; text-shadow: 2px 2px 0px #ffffff;'>SURPRISE....ADA SESUATU NIH BUAT WYNTER !!!</div>", unsafe_allow_html=True)
         st.markdown("<h1 style='text-align: center; font-size: 100px; margin-top: 20px; filter: drop-shadow(5px 5px 0px #c71585);'>💌</h1>", unsafe_allow_html=True)
-        
         st.write("")
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -239,14 +231,12 @@ with layar_utama.container():
     # ================= HALAMAN 2 =================
     elif st.session_state.tahap == 2:
         st.markdown("<h1 style='text-align: center; font-size: 80px; margin-top: 2vh; filter: drop-shadow(5px 5px 0px #c71585);'>🫣</h1>", unsafe_allow_html=True)
-        
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 18px; color: #ff1493; text-shadow: 2px 2px 0px #ffffff; line-height: 1.8;'>KAMU SAYANG DION GA?</div>", unsafe_allow_html=True)
             st.write("")
             jawaban = st.radio("Pilih:", ["IYAAAAAA DONGGG", "IYAAAAAA BANGET"], index=None, label_visibility="collapsed")
             st.write("") 
-            
             if jawaban:
                 if st.button("START >", use_container_width=True):
                     st.session_state.tahap = 3 
@@ -254,18 +244,11 @@ with layar_utama.container():
             else:
                 st.button("LOCKED X", disabled=True, use_container_width=True)
 
-    # ================= HALAMAN 3 (LILIN & KUE OTOMATIS) =================
+    # ================= HALAMAN 3 =================
     elif st.session_state.tahap == 3:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 2vh;'>MAKE A WISH & TIUP LILINNYA!</div>", unsafe_allow_html=True)
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 10px; color: #c71585; margin-bottom: 5px;'>(Izinkan akses mikrofon lalu tiup speaker bawah HP-mu)</div>", unsafe_allow_html=True)
-
-        st.markdown("""
-        <style>
-        div[data-testid="stButton"] {
-            display: none !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+        st.markdown("<style>div[data-testid=\"stButton\"] { display: none !important; }</style>", unsafe_allow_html=True)
 
         html_kue = """
         <!DOCTYPE html>
@@ -274,7 +257,6 @@ with layar_utama.container():
         <style>
           body { text-align: center; background-color: transparent; overflow: hidden; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace;}
           .party-container { position: relative; margin-top: 100px; display: inline-block; }
-          
           .cake {
             width: 180px; height: 90px; background: #ffb6c1; position: relative; margin: 0 auto;
             border-radius: 10px 10px 5px 5px; border: 4px solid #c71585; box-shadow: 0 8px 0 #c71585;
@@ -292,19 +274,15 @@ with layar_utama.container():
           .s2 { background: #00ced1; top: 10px; left: 60px; transform: rotate(-20deg); }
           .s3 { background: #ffd700; top: 20px; left: 100px; transform: rotate(45deg); }
           .s4 { background: #32cd32; top: 12px; left: 140px; transform: rotate(-45deg); }
-          
           .candle {
             width: 20px; height: 50px;
             background: repeating-linear-gradient(45deg, #ffffff, #ffffff 5px, #ff1493 5px, #ff1493 10px);
             border: 3px solid #c71585; border-radius: 4px; 
             position: absolute; left: 50%; top: -50px; transform: translateX(-50%); z-index: 3;
           }
-          .wick {
-            width: 4px; height: 12px; background: #333; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); border-radius: 2px;
-          }
+          .wick { width: 4px; height: 12px; background: #333; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); border-radius: 2px; }
           .flame {
-            width: 18px; height: 35px;
-            background: radial-gradient(ellipse at bottom, #fff 10%, #fde08b 30%, #ff8c00 70%, transparent 100%);
+            width: 18px; height: 35px; background: radial-gradient(ellipse at bottom, #fff 10%, #fde08b 30%, #ff8c00 70%, transparent 100%);
             border-radius: 50% 50% 20% 20%; position: absolute; top: -42px; left: 50%; transform: translateX(-50%);
             animation: flicker 0.1s infinite alternate; box-shadow: 0 0 20px #ffaa00, 0 0 40px #ffaa00; transform-origin: bottom center;
           }
@@ -316,37 +294,22 @@ with layar_utama.container():
             width: 10px; height: 10px; background: rgba(100,100,100,0.5); border-radius: 50%;
             position: absolute; top: -15px; left: 50%; transform: translateX(-50%); opacity: 0;
           }
-          
           .blow-out .flame { display: none; }
           .blow-out .smoke { animation: floatUp 2s ease-out forwards; }
           @keyframes floatUp {
             0% { transform: translate(-50%, 0) scale(1); opacity: 1; }
             100% { transform: translate(-50%, -100px) scale(4); opacity: 0; }
           }
-          
           #status { color: #d81b60; font-weight: bold; font-size: 14px; border: 2px dashed #d81b60; padding: 10px; display: inline-block; border-radius: 10px; background-color: rgba(255,255,255,0.7); margin-top: 50px;}
         </style>
         </head>
         <body>
           <div class="party-container" id="candle-wrap">
-            <div class="candle">
-              <div class="wick"></div>
-              <div class="flame" id="flame"></div>
-              <div class="smoke"></div>
-            </div>
-            <div class="cake">
-              <div class="icing">
-                <div class="sprinkle s1"></div>
-                <div class="sprinkle s2"></div>
-                <div class="sprinkle s3"></div>
-                <div class="sprinkle s4"></div>
-              </div>
-            </div>
+            <div class="candle"><div class="wick"></div><div class="flame" id="flame"></div><div class="smoke"></div></div>
+            <div class="cake"><div class="icing"><div class="sprinkle s1"></div><div class="sprinkle s2"></div><div class="sprinkle s3"></div><div class="sprinkle s4"></div></div></div>
             <div class="plate"></div>
-          </div>
-          <br>
+          </div><br>
           <div id="status">⏳ Menunggu akses mikrofon...</div>
-
           <script>
             navigator.mediaDevices.getUserMedia({ audio: true })
               .then(function(stream) {
@@ -355,32 +318,19 @@ with layar_utama.container():
                 let analyser = audioContext.createAnalyser();
                 let microphone = audioContext.createMediaStreamSource(stream);
                 let scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
-
-                analyser.smoothingTimeConstant = 0.8;
-                analyser.fftSize = 1024;
-                microphone.connect(analyser);
-                analyser.connect(scriptProcessor);
-                scriptProcessor.connect(audioContext.destination);
-
+                analyser.smoothingTimeConstant = 0.8; analyser.fftSize = 1024;
+                microphone.connect(analyser); analyser.connect(scriptProcessor); scriptProcessor.connect(audioContext.destination);
                 scriptProcessor.onaudioprocess = function() {
-                  let array = new Uint8Array(analyser.frequencyBinCount);
-                  analyser.getByteFrequencyData(array);
-                  let values = 0;
-                  for (let i = 0; i < array.length; i++) { values += (array[i]); }
+                  let array = new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(array);
+                  let values = 0; for (let i = 0; i < array.length; i++) { values += (array[i]); }
                   let average = values / array.length;
-                  
                   if (average > 60) { 
                     document.getElementById('candle-wrap').classList.add('blow-out');
                     document.getElementById('status').innerText = "✨ YAY! LILIN MATI! TUNGGU BENTAR...";
                     stream.getTracks().forEach(track => track.stop()); 
-                    
                     setTimeout(function() {
                         let buttons = window.parent.document.querySelectorAll('button');
-                        buttons.forEach(b => {
-                            if(b.textContent.includes('LANJUTKAN')) {
-                                b.click();
-                            }
-                        });
+                        buttons.forEach(b => { if(b.textContent.includes('LANJUTKAN')) { b.click(); } });
                     }, 2000);
                   }
                 }
@@ -400,26 +350,22 @@ with layar_utama.container():
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # ================= HALAMAN 4 (ANIMASI LEVEL UP) =================
+    # ================= HALAMAN 4 =================
     elif st.session_state.tahap == 4:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; margin-top: 35vh; text-shadow: 4px 4px 0px #ffffff;'>LEVEL 25...</div>", unsafe_allow_html=True)
         time.sleep(1.5) 
-        
         layar_utama.empty()
-        
         with layar_utama.container():
             st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 40px; color: #ff1493; margin-top: 30vh; text-shadow: 5px 5px 0px #ffffff; line-height: 1.5;'>LEVEL UP!<br><br>⭐ 26 ⭐</div>", unsafe_allow_html=True)
             if os.path.exists(FILE_LEVELUP):
                 st.audio(FILE_LEVELUP, format="audio/mpeg", autoplay=True) 
         time.sleep(3) 
-        
         st.session_state.tahap = 5
         st.rerun()
 
     # ================= HALAMAN 5 (SURAT UTAMA) =================
     elif st.session_state.tahap == 5:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-bottom: 20px; line-height: 1.5;'>STAGE CLEAR:<br><br>LEVEL UP!!! 💖🥳</div>", unsafe_allow_html=True)
-        
         st.balloons()
         
         elemen_love = ""
@@ -430,9 +376,21 @@ with layar_utama.container():
             elemen_love += f"<div class='hujan-love' style='left: {left}vw; animation-delay: {delay}s; animation-duration: {duration}s;'>💖</div>"
         st.markdown(elemen_love, unsafe_allow_html=True)
         
-        pesan_surat = """
+        # Logika khusus membaca file ucapan.mp3 dan merubahnya ke tag HTML <audio>
+        audio_html = ""
+        if os.path.exists(FILE_UCAPAN):
+            with open(FILE_UCAPAN, "rb") as f:
+                audio_b64 = base64.b64encode(f.read()).decode()
+            audio_html = f'''
+            <audio controls class="pesan-suara">
+                <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mpeg">
+            </audio>
+            '''
+        
+        pesan_surat = f"""
         <div class="kertas-surat">
             <p><b>Hai BABE ku CAYAANGGGGGGGGGGGGG!</b></p>
+            {audio_html}
             <p>happy level up day!!! make a wish for u b'day, tahun ini umur kamu bertambah satu tahun dan jatah hidup kamu berkurang satu tahun juga semoga kamu sehat, kmu skrg makin dewasa, apapun yang kamu inginkan bisa terjadi. terimakasih udh lahir di dunia ini dan bertahan hidup, banyak hal yang sudah kmu laluin dan masih bnyk hal yng blm km laluin, semakin kamu dewasa semkin bnyk juga rintangannya but its okayy karna masih bnyk orang yg sayang sma kmu salah satunya aku ><, apapun susahnya apapun sedihnya apapun senangnya kamu nikmatin dn brsyukur. semoga banyak kebahagiaan yang kembali dari hari ini semoga semua harapan yg diinginkan menjadi kenyataan semoga akan ada banyak kebahagiaan yang datang ke dalam hidupmu semoga harimu jauh lebih menyenangkan sesuai dng harapan mu. sekali lagi selamat ulang tahun ya, terimakasih sudah menjadi kuat selama ini walaupun awalnya dikuat2in aj dan slnjutnya harus slalu kuat, ceria bahagia yaa!! I LOVE YOU SO MUCH NATAREL PRISQILLA RIANDINI HIMAWAN <3 </p>
             <div class="blinking-cursor">▼</div>
         </div>
@@ -445,54 +403,38 @@ with layar_utama.container():
                 st.session_state.tahap = 6
                 st.rerun()
 
-    # ================= HALAMAN 6 (MENU PILIHAN) =================
+    # ================= HALAMAN 6 =================
     elif st.session_state.tahap == 6:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; text-shadow: 4px 4px 0px #ffffff; margin-top: 10vh; margin-bottom: 40px; line-height: 1.5;'>PILIH STAGE 🎮</div>", unsafe_allow_html=True)
-        
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             st.link_button("💬 CEK CAKE MU !!! ", "https://wa.me/6285778103534?text=Halo Sayang, I LOVE YOU TOO SO MUCH <3 ", use_container_width=True)
             st.write("")
-            
             if st.button("📸 KENANGAN KITA", use_container_width=True):
                 st.session_state.tahap = 7
                 st.rerun()
-                
             st.write("")
             st.write("")
-            
             if st.button("< KEMBALI", use_container_width=True):
                 st.session_state.tahap = 5
                 st.rerun()
 
-    # ================= HALAMAN 7 (KONSOL FOTO - SLIDESHOW 10 FOTO) =================
+    # ================= HALAMAN 7 =================
     elif st.session_state.tahap == 7:
-        
         st.markdown("""
         <style>
-        /* Trik 'Transform': Menggeser KEDUA baris tombol secara BERSAMAAN 
-           tanpa saling bertabrakan atau menumpuk (100% Fix) */
         div[data-testid="stHorizontalBlock"] {
-            transform: translateY(-170px);
-            position: relative;
-            z-index: 10;
-            width: 270px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            transform: translateY(-170px); position: relative; z-index: 10;
+            width: 270px !important; margin-left: auto !important; margin-right: auto !important;
         }
         div[data-testid="stHorizontalBlock"] button {
-            border-radius: 15px !important; 
-            box-shadow: 4px 4px 0px #c71585 !important;
-            padding: 10px 5px !important;
-            margin-bottom: 5px !important;
+            border-radius: 15px !important; box-shadow: 4px 4px 0px #c71585 !important;
+            padding: 10px 5px !important; margin-bottom: 5px !important;
         }
-        div[data-testid="stHorizontalBlock"] button p {
-            font-size: 11px !important;
-        }
+        div[data-testid="stHorizontalBlock"] button p { font-size: 11px !important; }
         </style>
         """, unsafe_allow_html=True)
         
-        # Mengecek dan memuat foto sesuai index saat ini (SUDAH DIUBAH KE .png)
         nama_file_sekarang = f"foto{st.session_state.foto_index}.png"
         path_foto = os.path.join(DIR_SAAT_INI, nama_file_sekarang)
         
@@ -500,12 +442,10 @@ with layar_utama.container():
         if os.path.exists(path_foto):
             with open(path_foto, "rb") as image_file:
                 encoded_img = base64.b64encode(image_file.read()).decode()
-            # SUDAH DIUBAH KE image/png
             img_html = f'<img src="data:image/png;base64,{encoded_img}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;">'
         else:
             img_html = f'<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background-color: #222; color: #fff; font-family: \'Press Start 2P\', cursive; font-size: 10px; text-align: center;">{nama_file_sekarang}<br><br>KOSONG</div>'
 
-        # Konsol Gameboy dipertinggi menjadi 480px agar ruang bawahnya super lega
         gameboy_html = f"""
 <div style="background-color: #d8d8d8; border: 5px solid #ffffff; border-radius: 10px 10px 40px 10px; padding: 20px; width: 320px; height: 480px; margin: 5vh auto 0 auto; box-shadow: 8px 8px 0px rgba(255,105,180,0.5); position: relative; z-index: 1;">
 <div style="background-color: #555555; border-radius: 10px 10px 30px 10px; padding: 15px; width: 100%; box-sizing: border-box; height: 200px; position: relative;">
@@ -516,25 +456,18 @@ with layar_utama.container():
 {img_html}
 </div>
 </div>
-<!-- Indikator 1/10 disisipkan ke dalam HTML -->
 <div style="text-align: center; margin-top: 20px; font-family: 'Press Start 2P', cursive; font-size: 12px; color: #ff1493;">{st.session_state.foto_index}/10</div>
-
 <div style="position: absolute; bottom: 25px; left: 20px; font-family: 'Press Start 2P', cursive; font-size: 9px; color: #9c9c9c; font-weight: bold; letter-spacing: 1px;">1 JUNI 2026</div>
 <div style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 6px; transform: rotate(-25deg);">
-<div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
-<div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
-<div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
-<div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
+<div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div><div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div><div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div><div style="width: 5px; height: 35px; background-color: #9c9c9c; border-radius: 5px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);"></div>
 </div>
 <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px;">
-<div style="width: 20px; height: 3px; background-color: #b0b0b0; border-radius: 2px;"></div>
-<div style="width: 20px; height: 3px; background-color: #b0b0b0; border-radius: 2px;"></div>
+<div style="width: 20px; height: 3px; background-color: #b0b0b0; border-radius: 2px;"></div><div style="width: 20px; height: 3px; background-color: #b0b0b0; border-radius: 2px;"></div>
 </div>
 </div>
 """
         st.markdown(gameboy_html, unsafe_allow_html=True)
         
-        # BARIS 1: Tombol Navigasi Foto
         col1, col2 = st.columns(2)
         with col1:
             if st.button("⏪ FOTO", use_container_width=True):
@@ -545,7 +478,6 @@ with layar_utama.container():
                 st.session_state.foto_index = st.session_state.foto_index + 1 if st.session_state.foto_index < 10 else 1
                 st.rerun()
 
-        # BARIS 2: Tombol BACK 
         col_b1, col_b2, col_b3 = st.columns([1, 2, 1])
         with col_b2:
             if st.button("< BACK", use_container_width=True):
@@ -555,7 +487,6 @@ with layar_utama.container():
     # ================= HALAMAN 8 =================
     elif st.session_state.tahap == 8:
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 24px; color: #ff1493; text-shadow: 3px 3px 0px #ffffff; margin-top: 15vh; margin-bottom: 30px; line-height: 1.5;'>TO BE CONTINUED... ✨</div>", unsafe_allow_html=True)
-        
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("< KEMBALI", use_container_width=True):
