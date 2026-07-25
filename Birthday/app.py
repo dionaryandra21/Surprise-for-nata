@@ -136,8 +136,15 @@ audio.pesan-suara {
     margin-top: 15px; 
     margin-bottom: 20px;
     outline: none;
-    border-radius: 5px;
-    box-shadow: 4px 4px 0px #ffb6c1;
+    border-radius: 0px !important;
+    border: 4px solid #ff1493 !important;
+    background-color: #ffc0cb !important;
+    box-shadow: 6px 6px 0px #ffb6c1 !important;
+}
+/* Modifikasi khusus supaya bentuk membulat bawaan Chrome/Safari hilang */
+audio.pesan-suara::-webkit-media-controls-enclosure {
+    border-radius: 0px !important;
+    background-color: #ffc0cb !important;
 }
 
 .kertas-surat {
