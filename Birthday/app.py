@@ -376,25 +376,27 @@ with layar_utama.container():
             elemen_love += f"<div class='hujan-love' style='left: {left}vw; animation-delay: {delay}s; animation-duration: {duration}s;'>💖</div>"
         st.markdown(elemen_love, unsafe_allow_html=True)
         
-        # Logika khusus membaca file ucapan.mp3 dan merubahnya ke tag HTML <audio>
+        # Logika khusus membaca file ucapan.mp3
         audio_html = ""
         if os.path.exists(FILE_UCAPAN):
             with open(FILE_UCAPAN, "rb") as f:
                 audio_b64 = base64.b64encode(f.read()).decode()
-            audio_html = f'''
-            <audio controls class="pesan-suara">
-                <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mpeg">
-            </audio>
-            '''
+            # Teks mentok ke kiri agar tidak jadi blok kode
+            audio_html = f"""
+<audio controls class="pesan-suara">
+<source src="data:audio/mp3;base64,{audio_b64}" type="audio/mpeg">
+</audio>
+"""
         
+        # Teks mentok ke kiri agar tidak jadi blok kode
         pesan_surat = f"""
-        <div class="kertas-surat">
-            <p><b>Hai BABE ku CAYAANGGGGGGGGGGGGG!</b></p>
-            {audio_html}
-            <p>happy level up day!!! make a wish for u b'day, tahun ini umur kamu bertambah satu tahun dan jatah hidup kamu berkurang satu tahun juga semoga kamu sehat, kmu skrg makin dewasa, apapun yang kamu inginkan bisa terjadi. terimakasih udh lahir di dunia ini dan bertahan hidup, banyak hal yang sudah kmu laluin dan masih bnyk hal yng blm km laluin, semakin kamu dewasa semkin bnyk juga rintangannya but its okayy karna masih bnyk orang yg sayang sma kmu salah satunya aku ><, apapun susahnya apapun sedihnya apapun senangnya kamu nikmatin dn brsyukur. semoga banyak kebahagiaan yang kembali dari hari ini semoga semua harapan yg diinginkan menjadi kenyataan semoga akan ada banyak kebahagiaan yang datang ke dalam hidupmu semoga harimu jauh lebih menyenangkan sesuai dng harapan mu. sekali lagi selamat ulang tahun ya, terimakasih sudah menjadi kuat selama ini walaupun awalnya dikuat2in aj dan slnjutnya harus slalu kuat, ceria bahagia yaa!! I LOVE YOU SO MUCH NATAREL PRISQILLA RIANDINI HIMAWAN <3 </p>
-            <div class="blinking-cursor">▼</div>
-        </div>
-        """
+<div class="kertas-surat">
+<p><b>Hai BABE ku CAYAANGGGGGGGGGGGGG!</b></p>
+{audio_html}
+<p>happy level up day!!! make a wish for u b'day, tahun ini umur kamu bertambah satu tahun dan jatah hidup kamu berkurang satu tahun juga semoga kamu sehat, kmu skrg makin dewasa, apapun yang kamu inginkan bisa terjadi. terimakasih udh lahir di dunia ini dan bertahan hidup, banyak hal yang sudah kmu laluin dan masih bnyk hal yng blm km laluin, semakin kamu dewasa semkin bnyk juga rintangannya but its okayy karna masih bnyk orang yg sayang sma kmu salah satunya aku ><, apapun susahnya apapun sedihnya apapun senangnya kamu nikmatin dn brsyukur. semoga banyak kebahagiaan yang kembali dari hari ini semoga semua harapan yg diinginkan menjadi kenyataan semoga akan ada banyak kebahagiaan yang datang ke dalam hidupmu semoga harimu jauh lebih menyenangkan sesuai dng harapan mu. sekali lagi selamat ulang tahun ya, terimakasih sudah menjadi kuat selama ini walaupun awalnya dikuat2in aj dan slnjutnya harus slalu kuat, ceria bahagia yaa!! I LOVE YOU SO MUCH NATAREL PRISQILLA RIANDINI HIMAWAN &lt;3 </p>
+<div class="blinking-cursor">▼</div>
+</div>
+"""
         st.markdown(pesan_surat, unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
