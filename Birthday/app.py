@@ -417,13 +417,17 @@ with layar_utama.container():
         st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; text-shadow: 4px 4px 0px #ffffff; margin-top: 10vh; margin-bottom: 40px; line-height: 1.5;'>PILIH STAGE 🎮</div>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.link_button("💬 CEK CAKE MU !!! ", "https://wa.me/6285778103534?text=Halo Sayang, I LOVE YOU TOO SO MUCH <3 ", use_container_width=True)
-            st.write("")
             if st.button("📸 KENANGAN KITA", use_container_width=True):
                 st.session_state.tahap = 7
                 st.rerun()
+            
+            st.write("")
+            
+            st.link_button("💬 CEK CAKE MU !!! ", "https://wa.me/6285778103534?text=Halo Sayang, I LOVE YOU TOO SO MUCH <3 ", use_container_width=True)
+            
             st.write("")
             st.write("")
+            
             if st.button("< KEMBALI", use_container_width=True):
                 st.session_state.tahap = 5
                 st.rerun()
