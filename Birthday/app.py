@@ -359,11 +359,11 @@ with layar_utama.container():
 
     # ================= HALAMAN 4 =================
     elif st.session_state.tahap == 4:
-        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; margin-top: 35vh; text-shadow: 4px 4px 0px #ffffff;'>LEVEL 25...</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 28px; color: #ff1493; margin-top: 35vh; text-shadow: 4px 4px 0px #ffffff;'>LEVEL 24...</div>", unsafe_allow_html=True)
         time.sleep(1.5) 
         layar_utama.empty()
         with layar_utama.container():
-            st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 40px; color: #ff1493; margin-top: 30vh; text-shadow: 5px 5px 0px #ffffff; line-height: 1.5;'>LEVEL UP!<br><br>⭐ 26 ⭐</div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; font-family: \"Press Start 2P\", cursive; font-size: 40px; color: #ff1493; margin-top: 30vh; text-shadow: 5px 5px 0px #ffffff; line-height: 1.5;'>LEVEL UP!<br><br>⭐ 25 ⭐</div>", unsafe_allow_html=True)
             if os.path.exists(FILE_LEVELUP):
                 st.audio(FILE_LEVELUP, format="audio/mpeg", autoplay=True) 
         time.sleep(3) 
