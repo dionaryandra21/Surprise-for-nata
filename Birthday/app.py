@@ -9,7 +9,7 @@ import base64
 DIR_SAAT_INI = os.path.dirname(os.path.abspath(__file__))
 FILE_LAGU = os.path.join(DIR_SAAT_INI, "lagu.mp3")
 FILE_LEVELUP = os.path.join(DIR_SAAT_INI, "levelup.mp3")
-FILE_UCAPAN = os.path.join(DIR_SAAT_INI, "ucapan.mp3") # File audio ucapan baru
+FILE_UCAPAN = os.path.join(DIR_SAAT_INI, "ucapan.mp3")
 
 # Mengatur konfigurasi halaman
 st.set_page_config(page_title="Surat Spesial", page_icon="💌")
@@ -128,7 +128,7 @@ html, body, [class*="css"], p, div, label, h1, h2, h3 {
 }
 @keyframes fall { to { transform: translateY(110vh); } }
 
-/* Menghilangkan audio default (untuk background music), tapi memunculkan audio ucapan */
+/* CSS Audio retro */
 audio { display: none !important; }
 audio.pesan-suara { 
     display: block !important; 
@@ -141,7 +141,6 @@ audio.pesan-suara {
     background-color: #ffc0cb !important;
     box-shadow: 6px 6px 0px #ffb6c1 !important;
 }
-/* Modifikasi khusus supaya bentuk membulat bawaan Chrome/Safari hilang */
 audio.pesan-suara::-webkit-media-controls-enclosure {
     border-radius: 0px !important;
     background-color: #ffc0cb !important;
@@ -388,14 +387,12 @@ with layar_utama.container():
         if os.path.exists(FILE_UCAPAN):
             with open(FILE_UCAPAN, "rb") as f:
                 audio_b64 = base64.b64encode(f.read()).decode()
-            # Teks mentok ke kiri agar tidak jadi blok kode
             audio_html = f"""
 <audio controls class="pesan-suara">
 <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mpeg">
 </audio>
 """
         
-        # Teks mentok ke kiri agar tidak jadi blok kode
         pesan_surat = f"""
 <div class="kertas-surat">
 <p><b>Hai BABE ku CAYAANGGGGGGGGGGGGG!</b></p>
@@ -423,7 +420,7 @@ with layar_utama.container():
             
             st.write("")
             
-            st.link_button("💬 CEK CAKE MU !!! ", "https://wa.me/6285778103534?text=Halo Sayang, I LOVE YOU TOO SO MUCH <3 ", use_container_width=True)
+            st.link_button("💬 CEK CAKE MU !!! ", "https://gofood.link/a/e-qrRPqkp", use_container_width=True)
             
             st.write("")
             st.write("")
